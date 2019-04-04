@@ -1,7 +1,5 @@
 import './style.css';
 
-
-
 const Month = [
     'Jan',
     'Feb',
@@ -33,15 +31,19 @@ Date.prototype.daysInMonth = function() {
 
 
 
-document.querySelectorAll('input[type="date_picker"]').forEach((datepicker) => {
+document.querySelectorAll('input[type="date_picker"]').forEach((datepicker, index) => {
     let clickDatepicker = false;
 
-    const currentDate = new Date(2019, 1);
+    datepicker.dataset.id = index + '';
+
+
+    const currentDate = new Date();
 
     const coordinates = datepicker.getBoundingClientRect();
 
     const calendar = document.createElement('div');
     calendar.className = 'calendar';
+
 
     calendar.style.top = `${coordinates.bottom}px`;
     calendar.style.left = `${coordinates.left}px`;
@@ -85,10 +87,8 @@ document.querySelectorAll('input[type="date_picker"]').forEach((datepicker) => {
     });
 
     const daysOfMonth = createDaysOfMonth(currentDate);
-
-
-
-
+    daysOfMonth.dataset.id = index + '';
+    selectDate(daysOfMonth);
 
 
     dateInputWrapper.appendChild(selectMonth);
@@ -104,8 +104,21 @@ document.querySelectorAll('input[type="date_picker"]').forEach((datepicker) => {
     document.querySelector("body").appendChild(calendar);
 
 
+
+
+
     calendar.addEventListener("mousedown", () => {
         clickDatepicker = true;
+    });
+
+    selectMonth.addEventListener('change', () => {
+        daysOfMonth.innerHTML = createDaysOfMonth(new Date(+inputYear.value, +selectMonth.value)).innerHTML;
+        selectDate(daysOfMonth);
+    });
+
+    inputYear.addEventListener('change', () => {
+        daysOfMonth.innerHTML = createDaysOfMonth(new Date(+inputYear.value, +selectMonth.value)).innerHTML;
+        selectDate(daysOfMonth);
     });
 
 
@@ -114,7 +127,27 @@ document.querySelectorAll('input[type="date_picker"]').forEach((datepicker) => {
     });
 
     datepicker.addEventListener('blur', (event) => {
-        clickDatepicker ? datepicker.focus() : calendar.classList.remove('active');
+
+        if(clickDatepicker) datepicker.focus()
+            else {
+                calendar.classList.remove('active');
+                const selectedDate = datepicker.value.split('-');
+
+                selectedDate[1] = `${+selectedDate[1] -1}`;
+
+                if(+selectedDate[1] < 10) selectedDate[1] = '0' + selectedDate[1];
+
+                const checkSelectedDate = (+selectedDate[0] >= 1000) && (+selectedDate[0] < 9999) && (+selectedDate[1] >= 1) && (+selectedDate[1] <= 12) && (+selectedDate[2] >= 1) && (+selectedDate[2] <= new Date(+selectedDate[0], +selectedDate[1]).daysInMonth());
+                if (selectedDate && checkSelectedDate && !Number.isNaN(+selectedDate[0] + +selectedDate[1] + +selectedDate[2])){
+                    daysOfMonth.innerHTML = createDaysOfMonth(new Date(+selectedDate[0], +selectedDate[1])).innerHTML;
+                    selectDate(daysOfMonth);
+                    inputYear.value = selectedDate[0];
+                    selectMonth.value = `${+selectedDate[1]}`;
+                    daysOfMonth.querySelector(`div[data-date="${selectedDate[0]}-${selectedDate[1]}-${selectedDate[2]}"]`).classList.add('selected');
+                }
+
+        }
+
         clickDatepicker = false;
     })
 
@@ -147,8 +180,10 @@ function createDaysOfMonth( date ) {
 
             spanDayOfMonth.innerText = day;
 
-            if(day !== '') dayOfMonth.classList.add('enabled');
-
+            if(day !== '') {
+                dayOfMonth.classList.add('enabled');
+                dayOfMonth.dataset.date = `${date.getFullYear()}-${(date.getMonth() < 9) ? '0' + date.getMonth() : date.getMonth() }-${(day <= 9) ? '0' + day : day }`;
+            }
 
             dayOfMonth.appendChild(spanDayOfMonth);
             rowDaysOfMonth.appendChild(dayOfMonth);
@@ -157,8 +192,45 @@ function createDaysOfMonth( date ) {
         daysOfMonth.appendChild(rowDaysOfMonth);
     }
 
+    if(new Date().getFullYear() === date.getFullYear() && new Date().getMonth() === date.getMonth()){
+        daysOfMonth.querySelectorAll('.dayOfMonth.enabled').forEach( el => {
+            if(el.childNodes && +el.childNodes[0].innerText === new Date().getDate()){
+                el.classList.add('today');
+            }
+        })
+    }
+
     return daysOfMonth;
 
+}
+
+function selectDate(daysOfMonth) {
+    daysOfMonth.childNodes.forEach(week => {
+        week.childNodes.forEach( day => {
+            if (day.dataset.date && day.dataset.date !==''){
+                day.addEventListener('click', () => {
+                    if (daysOfMonth.querySelector('.rowDaysOfMonth .dayOfMonth.selected'))
+                        daysOfMonth.querySelector('.rowDaysOfMonth .dayOfMonth.selected').classList.remove('selected');
+
+                    document.querySelectorAll('input[type="date_picker"]').forEach(input => {
+                        if(input.dataset.id === daysOfMonth.dataset.id){
+                            const selectedDate = day.dataset.date.split('-');
+
+                            selectedDate[1] = `${+selectedDate[1] + 1}`;
+
+                            if(+selectedDate[1] < 10) selectedDate[1] = '0' + selectedDate[1];
+
+                            input.value = `${selectedDate[0]}-${selectedDate[1]}-${selectedDate[2]}`;
+
+                            day.classList.add('selected');
+                            input.blur()
+                        }
+                    })
+                });
+
+            }
+        })
+    });
 }
 
 
