@@ -25,13 +25,18 @@ const DaysOfWeek = [
     'Th',
     'Fr',
     'Sa',
-]
+];
+
+Date.prototype.daysInMonth = function() {
+    return 33 - new Date(this.getFullYear(), this.getMonth(), 33).getDate();
+};
+
 
 
 document.querySelectorAll('input[type="date_picker"]').forEach((datepicker) => {
     let clickDatepicker = false;
 
-    const currentDate = new Date();
+    const currentDate = new Date(2019, 1);
 
     const coordinates = datepicker.getBoundingClientRect();
 
@@ -115,11 +120,17 @@ document.querySelectorAll('input[type="date_picker"]').forEach((datepicker) => {
 
 });
 
-function createDaysOfMonth( Date ) {
+
+
+
+function createDaysOfMonth( date ) {
     const daysOfMonth = document.createElement('div');
     daysOfMonth.className = 'daysOfMonth';
 
-    for(let i = 0; i < 5; i++) {
+    const dayOfWeek = new Date(date.getFullYear(), date.getMonth()).getDay();
+    const countWeeksInMonth = (date.daysInMonth() - 7 + dayOfWeek) / 7 | 0 ;
+
+    for(let i = 0; i <= countWeeksInMonth + 1; i++) {
         const rowDaysOfMonth = document.createElement('div');
         rowDaysOfMonth.className = 'rowDaysOfMonth';
 
@@ -127,9 +138,17 @@ function createDaysOfMonth( Date ) {
             const dayOfMonth = document.createElement('div');
             dayOfMonth.className = 'dayOfMonth';
 
+            const currentDayOfMonth = (7 * i) + j + 1 - dayOfWeek;
+
             const spanDayOfMonth = document.createElement('span');
 
-            spanDayOfMonth.innerText = `${(7 * i) + j + 1}`;
+            const day = (currentDayOfMonth > 0 && currentDayOfMonth <= date.daysInMonth()) ?
+                currentDayOfMonth + '' : '';
+
+            spanDayOfMonth.innerText = day;
+
+            if(day !== '') dayOfMonth.classList.add('enabled');
+
 
             dayOfMonth.appendChild(spanDayOfMonth);
             rowDaysOfMonth.appendChild(dayOfMonth);
@@ -141,7 +160,6 @@ function createDaysOfMonth( Date ) {
     return daysOfMonth;
 
 }
-
 
 
 

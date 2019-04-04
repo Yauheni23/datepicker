@@ -87,9 +87,10 @@ input[type="date_picker"]:focus {
     /*border: 1px solid black;*/
 }
 
-.dayOfMonth:hover {
+.dayOfMonth.enabled:hover {
     background: rgba(0, 0, 255, 0.55);
     cursor: pointer;
+    border-radius: 3px;
 }
 
 
