@@ -1,5 +1,7 @@
 import './style.css';
 
+
+
 const Month = [
     'Jan',
     'Feb',
@@ -27,9 +29,9 @@ const DaysOfWeek = [
 
 
 document.querySelectorAll('input[type="date_picker"]').forEach((datepicker) => {
-    const currentDate = new Date();
+    let clickDatepicker = false;
 
-    // let month = currentDate.getMonth();
+    const currentDate = new Date();
 
     const coordinates = datepicker.getBoundingClientRect();
 
@@ -97,17 +99,18 @@ document.querySelectorAll('input[type="date_picker"]').forEach((datepicker) => {
     document.querySelector("body").appendChild(calendar);
 
 
+    calendar.addEventListener("mousedown", () => {
+        clickDatepicker = true;
+    });
 
 
-
-
-
-    datepicker.addEventListener('click', () => {
+    datepicker.addEventListener('focus', () => {
         calendar.classList.add('active');
     });
 
-    datepicker.addEventListener('blur', () => {
-        calendar.classList.remove('active');
+    datepicker.addEventListener('blur', (event) => {
+        clickDatepicker ? datepicker.focus() : calendar.classList.remove('active');
+        clickDatepicker = false;
     })
 
 });
