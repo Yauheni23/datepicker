@@ -17,19 +17,16 @@ input[type="date_picker"]:focus {
     padding: 5px;
     position: absolute;
     width: 250px;
-    /*height: 220px;*/
     background: #ffffff;
     border: 1px solid black;
     border-radius: 3px;
     display: none;
-    /*display: block;*/
 }
 
 .dateInputWrapper {
     width: 100%;
     height: 30px;
     border-radius: 3px;
-    /*background: rgba(0, 0, 0, 0.1);*/
     text-align: center;
     display: flex;
     justify-content: center;
@@ -84,7 +81,6 @@ input[type="date_picker"]:focus {
     text-align: right;
     padding: 3px;
     margin: 2px;
-    /*border: 1px solid black;*/
 }
 
 .dayOfMonth.enabled:hover {

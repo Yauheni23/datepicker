@@ -29,6 +29,7 @@ Date.prototype.daysInMonth = function() {
     return 33 - new Date(this.getFullYear(), this.getMonth(), 33).getDate();
 };
 
+document.addEventListener('DOMContentLoaded', function() {
 
 
 document.querySelectorAll('input[type="date_picker"]').forEach((datepicker, index) => {
@@ -153,6 +154,7 @@ document.querySelectorAll('input[type="date_picker"]').forEach((datepicker, inde
 
 });
 
+}, false);
 
 
 
