@@ -20,7 +20,8 @@ input[type="date_picker"]:focus {
     background: #ffffff;
     border: 1px solid black;
     border-radius: 3px;
-    display: none;
+    display: block;
+    /*display: none;*/
 }
 
 .dateInputWrapper {

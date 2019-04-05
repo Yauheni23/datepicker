@@ -9,28 +9,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 document.querySelectorAll(config.SELECTOR_INPUT_DATE_PICKER).forEach((datepicker, index) => {
+
     let clickDatepicker = false;
+
+
 
     datepicker.dataset.id = index + '';
 
 
+    /*                                       */
+
+
+
+
+
     const currentDate = new Date();
 
-    const coordinates = datepicker.getBoundingClientRect();
+
 
     const calendar = document.createElement(config.SELECTOR_DIV);
     calendar.className = config.CSS_CLASS_CALENDAR;
 
+    /* Location calendar*/
 
+    const coordinates = datepicker.getBoundingClientRect();
     calendar.style.top = `${coordinates.bottom}px`;
     calendar.style.left = `${coordinates.left}px`;
 
-    const dateInputWrapper = document.createElement(config.SELECTOR_DIV);
 
+
+    const dateInputWrapper = document.createElement(config.SELECTOR_DIV);
     dateInputWrapper.className = config.CSS_CLASS_DATE_INPUT_WRAPPER;
 
     const selectMonth = document.createElement(config.SELECTOR_SELECT);
-
     selectMonth.id = config.CSS_ID_MONTH;
 
     config.MONTH.forEach((el, index) => {
@@ -43,13 +54,11 @@ document.querySelectorAll(config.SELECTOR_INPUT_DATE_PICKER).forEach((datepicker
     selectMonth.value = currentDate.getMonth() + '';
 
     const inputYear = document.createElement(config.SELECTOR_INPUT);
-
     inputYear.id = config.CSS_ID_YEAR;
     inputYear.type = config.ATTRIBUTE_TYPE_NUMBER;
     inputYear.value = currentDate.getFullYear() + '';
 
     const daysOfWeek = document.createElement(config.SELECTOR_DIV);
-
     daysOfWeek.className = config.CSS_CLASS_DAYS_OF_WEEK;
 
     config.DAYS_OF_WEEK.forEach(name => {
@@ -68,6 +77,8 @@ document.querySelectorAll(config.SELECTOR_INPUT_DATE_PICKER).forEach((datepicker
 
     selectDate(daysOfMonth);
 
+
+
     dateInputWrapper.appendChild(selectMonth);
 
     dateInputWrapper.appendChild(inputYear);
@@ -81,7 +92,7 @@ document.querySelectorAll(config.SELECTOR_INPUT_DATE_PICKER).forEach((datepicker
     document.querySelector(config.SELECTOR_BODY).appendChild(calendar);
 
 
-
+    /* Event-listners for calendar */
 
 
     calendar.addEventListener(config.EVENT_LISTENER_MOUSEDOWN, () => {
@@ -137,6 +148,7 @@ document.querySelectorAll(config.SELECTOR_INPUT_DATE_PICKER).forEach((datepicker
     })
 
 });
+
 
 }, false);
 
