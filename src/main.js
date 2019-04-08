@@ -1,13 +1,12 @@
 import './style.css';
 import {config} from './config';
-import {DateForMonth} from './DateForMonth';
-import {Calendar} from './calendar';
+import {DatepickerHtmlElement} from './datepickerHtmlElement';
 
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll(config.SELECTOR_INPUT_DATE_PICKER).forEach((datepicker, index) => {
         datepicker.dataset.id = index + '';
 
-        const calendar = new Calendar(new DateForMonth(), index, {
+        const calendar = new DatepickerHtmlElement(index, {
             hideSelectedDate: false,
             hideHover: false,
             hideCurrentDate: false,
