@@ -27,6 +27,7 @@ export const config =  {
     CSS_CLASS_ACTIVE: 'active',
     CSS_CLASS_ENABLED: 'enabled',
     CSS_CLASS_SELECTED: 'selected',
+    CSS_CLASS_SHOW_HOVER: 'showHover',
 
     CSS_ID_MONTH: 'month',
     CSS_ID_YEAR: 'year',

@@ -20,8 +20,8 @@ input[type="date_picker"]:focus {
     background: #ffffff;
     border: 1px solid black;
     border-radius: 3px;
-    display: block;
-    /*display: none;*/
+    /*display: block;*/
+    display: none;
 }
 
 .dateInputWrapper {
@@ -85,8 +85,11 @@ input[type="date_picker"]:focus {
 }
 
 .dayOfMonth.enabled:hover {
-    background: rgba(0, 0, 255, 0.55);
     cursor: pointer;
+}
+
+.daysOfMonth.showHover .rowDaysOfMonth .dayOfMonth.enabled:hover {
+    background: rgba(0, 0, 255, 0.55);
     border-radius: 3px;
 }
 

@@ -1,88 +1,24 @@
-const config =  {
-    MONTH: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    DAYS_OF_WEEK: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+import {config} from './config';
+import {DateForMonth} from './DateForMonth';
 
-    SELECTOR_INPUT_DATE_PICKER: 'input[type="date_picker"]',
-    SELECTOR_DIV: 'div',
-    SELECTOR_SELECT: 'select',
-    SELECTOR_OPTION: 'option',
-    SELECTOR_INPUT: 'INPUT',
-    SELECTOR_SPAN: 'span',
-    SELECTOR_BODY: 'body',
+export class Calendar {
+    constructor(selectedMonth = new DateForMonth(), id = 1, params = {}) {
+        this.params = {
+            hideSelectedDate: params.hideSelectedDate || false,
+            hideCurrentDate: params.hideCurrentDate || false,
+            hideHover: params.hideHover || false,
+            hideWeekend: params.hideWeekend || false,
+        };
 
-    EVENT_LISTENER_MOUSEDOWN: 'mousedown',
-    EVENT_LISTENER_CHANGE: 'change',
-    EVENT_LISTENER_FOCUS: 'focus',
-    EVENT_LISTENER_BLUR: 'blur',
-    EVENT_LISTENER_CLICK: 'click',
-
-    CSS_CLASS_CALENDAR: 'calendar',
-    CSS_CLASS_DATE_INPUT_WRAPPER: 'dateInputWrapper',
-    CSS_CLASS_ROW_DAYS_OF_MONTH: 'rowDaysOfMonth',
-    CSS_CLASS_DAYS_OF_MONTH: 'daysOfMonth',
-    CSS_CLASS_DAY_OF_MONTH: 'dayOfMonth',
-    CSS_CLASS_DAYS_OF_WEEK: 'daysOfWeek',
-    CSS_CLASS_DAY_OF_WEEK: 'dayOfWeek',
-    CSS_CLASS_TODAY: 'today',
-    CSS_CLASS_ACTIVE: 'active',
-    CSS_CLASS_ENABLED: 'enabled',
-    CSS_CLASS_SELECTED: 'selected',
-
-    CSS_ID_MONTH: 'month',
-    CSS_ID_YEAR: 'year',
-
-    ATTRIBUTE_TYPE_NUMBER: 'number',
-
-};
-
-
-
-class DateForMonth  extends Date {
-    daysInMonth() {
-        const NUMBER_FOR_COUNT_DAYS_IN_MONTH = 33;
-        return NUMBER_FOR_COUNT_DAYS_IN_MONTH
-            - new Date(this.getFullYear(), this.getMonth(), NUMBER_FOR_COUNT_DAYS_IN_MONTH).getDate();
-    }
-    arrayDaysInMonth() {
-        const arrayDaysInMonth = [];
-        const dayOfWeek = new Date(this.getFullYear(), this.getMonth()).getDay();
-        const countWeeksInMonth = (this.daysInMonth() - 7 + dayOfWeek) / 7 | 0 ;
-
-        for(let i = 0; i <= countWeeksInMonth + 1; i++) {
-            arrayDaysInMonth[i] = [];
-            for(let j = 0; j < 7; j++){
-                const currentDayOfMonth = (7 * i) + j + 1 - dayOfWeek;
-                arrayDaysInMonth[i][j] = (currentDayOfMonth > 0 && currentDayOfMonth <= this.daysInMonth()) ?
-                    currentDayOfMonth + '' : '';
-            }
-
-        }
-        return arrayDaysInMonth;
-    }
-    formatForInput(){
-        let month = this.getMonth() + 1;
-        let day = this.getDate();
-
-        (month <= 9) ? month = '0' + month : month + '';
-        (day <= 9) ? day = '0' + day : day + '';
-
-        return `${this.getFullYear()}-${month}-${day}`;
-    }
-}
-
-
-
-class Calendar {
-    constructor(selectedMonth = new DateForMonth(), selectedDate = null, id = 1) {
         this.clickDatepicker = false;
-
+        this.selectedDate = null;
         this.selectedMonth = selectedMonth;
         this.currentDate = new DateForMonth();
         this.id = id;
+        this.calendar = document.createElement(config.SELECTOR_DIV);
 
-        const calendar = document.createElement(config.SELECTOR_DIV);
-        calendar.className = config.CSS_CLASS_CALENDAR;
-        calendar.dataset.id = this.id;
+        this.calendar.className = config.CSS_CLASS_CALENDAR;
+        this.calendar.dataset.id = this.id;
 
         const dateInputWrapper = document.createElement(config.SELECTOR_DIV);
         dateInputWrapper.className = config.CSS_CLASS_DATE_INPUT_WRAPPER;
@@ -110,7 +46,7 @@ class Calendar {
 
         config.DAYS_OF_WEEK.forEach(name => {
             const dayOfWeek = document.createElement(config.SELECTOR_DIV);
-            dayOfWeek.className= config.CSS_CLASS_DAY_OF_WEEK;
+            dayOfWeek.className = config.CSS_CLASS_DAY_OF_WEEK;
 
             const spanDayOfWeek = document.createElement(config.SELECTOR_SPAN);
             spanDayOfWeek.innerText = name;
@@ -126,61 +62,55 @@ class Calendar {
 
         dateInputWrapper.appendChild(inputYear);
 
-        calendar.appendChild(dateInputWrapper);
+        this.calendar.appendChild(dateInputWrapper);
 
-        calendar.appendChild(daysOfWeek);
+        this.calendar.appendChild(daysOfWeek);
 
-        calendar.appendChild(daysOfMonth);
+        this.calendar.appendChild(daysOfMonth);
 
-        this.calendar = calendar ;
-
-
-
-
-        calendar.addEventListener(config.EVENT_LISTENER_MOUSEDOWN, () => {
+        this.calendar.addEventListener(config.EVENT_LISTENER_MOUSEDOWN, () => {
             this.clickDatepicker = true;
         });
 
         selectMonth.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
-            this.selectedMonth = new DateForMonth(+inputYear.value, +selectMonth.value);
-            this.calendar.replaceChild(
-                this.createDaysOfMonth(this.selectedMonth.arrayDaysInMonth()),
-                this.calendar.childNodes[2]
-            );
+            this.replaceMonth(+inputYear.value, +selectMonth.value);
         });
 
         inputYear.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
-            this.selectedMonth = new DateForMonth(+inputYear.value, +selectMonth.value);
-            this.calendar.replaceChild(
-                this.createDaysOfMonth(this.selectedMonth.arrayDaysInMonth()),
-                this.calendar.childNodes[2]
-            );
+            this.replaceMonth(+inputYear.value, +selectMonth.value);
         });
-
-
     }
 
-    createDaysOfMonth ( arrayDate ) {
+    /**
+     * Create view Month
+     * @param arrayDate Array[week of month][day of week]
+     * @returns {HTMLDivElement}
+     */
+    createDaysOfMonth(arrayDate) {
         const daysOfMonth = document.createElement(config.SELECTOR_DIV);
         daysOfMonth.className = config.CSS_CLASS_DAYS_OF_MONTH;
+        if (!this.params.hideHover) {
+            daysOfMonth.classList.add(config.CSS_CLASS_SHOW_HOVER);
+        }
 
-        for(let i = 0; i < arrayDate.length; i++) {
+        for (let i = 0; i < arrayDate.length; i++) {
             const rowDaysOfMonth = document.createElement(config.SELECTOR_DIV);
             rowDaysOfMonth.className = config.CSS_CLASS_ROW_DAYS_OF_MONTH;
 
-            for(let j = 0; j < 7; j++){
+            for (let j = 0; j < 7; j++) {
                 const dayOfMonth = document.createElement(config.SELECTOR_DIV);
                 dayOfMonth.className = config.CSS_CLASS_DAY_OF_MONTH;
 
-                if(arrayDate[i][j] !== '') {
+                if (arrayDate[i][j] !== '') {
                     const spanDayOfMonth = document.createElement(config.SELECTOR_SPAN);
                     spanDayOfMonth.innerText = arrayDate[i][j];
 
                     this.selectDate(dayOfMonth, arrayDate[i][j]);
 
-                    if(new Date().getFullYear() === this.selectedMonth.getFullYear()
+                    if (new Date().getFullYear() === this.selectedMonth.getFullYear()
                         && new Date().getMonth() === this.selectedMonth.getMonth()
-                        && new Date().getDate() === +arrayDate[i][j]) {
+                        && new Date().getDate() === +arrayDate[i][j]
+                        && !this.params.hideCurrentDate) {
                         dayOfMonth.classList.add(config.CSS_CLASS_TODAY);
                     }
                     dayOfMonth.classList.add(config.CSS_CLASS_ENABLED);
@@ -192,38 +122,74 @@ class Calendar {
 
             daysOfMonth.appendChild(rowDaysOfMonth);
         }
-
         return daysOfMonth;
-
     }
 
     selectDate(daySelector, dayDate) {
         daySelector.addEventListener(config.EVENT_LISTENER_CLICK, () => {
             const input = document.querySelector(config.SELECTOR_INPUT_DATE_PICKER + `[data-id="${this.id}"]`);
 
-            input.value = new DateForMonth(this.selectedMonth.getFullYear(),
-                                           this.selectedMonth.getMonth(),
-                                           dayDate).formatForInput();
+            this.selectedDate = new DateForMonth(this.selectedMonth.getFullYear(),
+                this.selectedMonth.getMonth(), dayDate);
+            input.value = this.selectedDate.formatForInput();
 
             const selectedDay = this.calendar.childNodes[2].querySelector(`.${config.CSS_CLASS_SELECTED}`);
-                if(selectedDay) { selectedDay.classList.remove(config.CSS_CLASS_SELECTED); }
+            if (selectedDay) {
+                selectedDay.classList.remove(config.CSS_CLASS_SELECTED);
+            }
 
             daySelector.classList.add(config.CSS_CLASS_SELECTED);
             input.blur();
         });
     }
 
+    replaceMonth(inputYear = new Date().getFullYear(), selectMonth = new Date().getMonth()) {
+        this.selectedMonth = new DateForMonth(inputYear, selectMonth);
+        this.calendar.replaceChild(
+            this.createDaysOfMonth(this.selectedMonth.arrayDaysInMonth()),
+            this.calendar.childNodes[2]
+        );
+    }
+
+    selectCoordinates(top, left) {
+        this.calendar.style.top = `${top}px`;
+        this.calendar.style.left = `${left}px`;
+    }
+
+
+    validDate(dateStr) {
+        const selectedDate = dateStr.split('-');
+        const date = {};
+
+        if ((+selectedDate[0] >= 1000)
+            && (+selectedDate[0] < 9999)
+            && (+selectedDate[1] >= 1)
+            && (+selectedDate[1] <= 12)
+            && (+selectedDate[2] >= 1)
+            && (+selectedDate[2] <= new DateForMonth(+selectedDate[0], +selectedDate[1]).daysInMonth())) {
+            date.valid = true;
+            date.year = +selectedDate[0];
+            date.month = +selectedDate[1] - 1;
+            date.day = +selectedDate[2];
+        }
+
+        return date;
+    }
+
+    setSelectedDate(date) {
+        this.selectedDate = new DateForMonth(date.year, date.month, date.day);
+        if (this.selectedMonth.getMonth() === date.month &&
+            this.selectedMonth.getFullYear() === date.year) {
+            this.calendar.childNodes[2].querySelectorAll('.enabled').forEach((el, index) => {
+                if (index + 1 === date.day) {
+                    el.classList.add(config.CSS_CLASS_SELECTED);
+                }
+            });
+        }
+    }
+
 }
 
-
-const calendar = new Calendar(new DateForMonth(2019, 2));
-
-console.log(calendar);
-// const newDate = new DateForMonth(2019,3);
-// console.log(newDate.getMonth());
-// console.log(newDate.formatForInput());
-// console.log(newDate.arrayDaysInMonth());
-document.body.appendChild(calendar.calendar);
 
 
 
