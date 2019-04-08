@@ -99,6 +99,10 @@ input[type="date_picker"]:focus {
     border-radius: 3px;
 }
 
+.weekend{
+    color: red;
+}
+
 .selected {
     background: rgba(0, 0, 255, 0.55);
     border-radius: 3px;

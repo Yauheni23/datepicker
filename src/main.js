@@ -10,38 +10,27 @@ document.addEventListener('DOMContentLoaded', function () {
         const calendar = new Calendar(new DateForMonth(), index, {
             hideSelectedDate: false,
             hideHover: false,
-            hideCurrentDate: false
+            hideCurrentDate: false,
+            hideWeekend: false
         });
 
         calendar.selectCoordinates(datepicker.getBoundingClientRect().bottom, datepicker.getBoundingClientRect().left);
 
         datepicker.addEventListener(config.EVENT_LISTENER_FOCUS, () => {
-            calendar.calendar.classList.add(config.CSS_CLASS_ACTIVE);
+            calendar.showDatepicker();
         });
 
         datepicker.addEventListener(config.EVENT_LISTENER_BLUR, () => {
             if (calendar.clickDatepicker) {
                 datepicker.focus();
             } else {
-                calendar.calendar.classList.remove(config.CSS_CLASS_ACTIVE);
-
-                const validDate = calendar.validDate(datepicker.value);
-                if (validDate.valid) {
-                    calendar.replaceMonth(validDate.year, validDate.month, validDate.day);
-                    if (!calendar.params.hideSelectedDate) {
-                        calendar.setSelectedDate(validDate);
-                    }
-
-                    calendar.calendar.childNodes[0].childNodes[1].value = validDate.year;
-                    calendar.calendar.childNodes[0].childNodes[0].value = validDate.month;
-                }
+                calendar.hideDatepicker();
+                calendar.replaceMonthFromInput(datepicker.value);
             }
 
             calendar.clickDatepicker = false;
-
         });
 
         document.body.appendChild(calendar.calendar);
-
     });
 });

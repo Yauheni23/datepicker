@@ -1,7 +1,17 @@
-import {config} from './config';
-import {DateForMonth} from './DateForMonth';
+import { config } from './config';
+import { DateForMonth } from './DateForMonth';
 
 export class Calendar {
+    /**
+     *
+     * @param selectedMonth A month
+     * @param id Id for binding with input[type="date_picker"], where data-id = id
+     * @param params hideSelectedDate - Hide display selected date,
+     * @param params hideCurrentDate - Hide display current date,
+     * @param params hideHover - Hide display hover,
+     * @param params hideWeekend - Hide display weekend
+     *
+     */
     constructor(selectedMonth = new DateForMonth(), id = 1, params = {}) {
         this.params = {
             hideSelectedDate: params.hideSelectedDate || false,
@@ -13,7 +23,6 @@ export class Calendar {
         this.clickDatepicker = false;
         this.selectedDate = null;
         this.selectedMonth = selectedMonth;
-        this.currentDate = new DateForMonth();
         this.id = id;
         this.calendar = document.createElement(config.SELECTOR_DIV);
 
@@ -33,13 +42,13 @@ export class Calendar {
             selectMonth.appendChild(option);
         });
 
-        selectMonth.value = this.currentDate.getMonth() + '';
+        selectMonth.value = this.selectedMonth.getMonth() + '';
 
         const inputYear = document.createElement(config.SELECTOR_INPUT);
 
         inputYear.id = config.CSS_ID_YEAR;
         inputYear.type = config.ATTRIBUTE_TYPE_NUMBER;
-        inputYear.value = this.currentDate.getFullYear() + '';
+        inputYear.value = this.selectedMonth.getFullYear() + '';
 
         const daysOfWeek = document.createElement(config.SELECTOR_DIV);
         daysOfWeek.className = config.CSS_CLASS_DAYS_OF_WEEK;
@@ -68,6 +77,8 @@ export class Calendar {
 
         this.calendar.appendChild(daysOfMonth);
 
+        /* Add event-listeners  */
+
         this.calendar.addEventListener(config.EVENT_LISTENER_MOUSEDOWN, () => {
             this.clickDatepicker = true;
         });
@@ -82,13 +93,14 @@ export class Calendar {
     }
 
     /**
-     * Create view Month
-     * @param arrayDate Array[week of month][day of week]
+     * Create view month
+     * @param arrayDate Array[week of month][day of week] = 'date of month'
      * @returns {HTMLDivElement}
      */
     createDaysOfMonth(arrayDate) {
         const daysOfMonth = document.createElement(config.SELECTOR_DIV);
         daysOfMonth.className = config.CSS_CLASS_DAYS_OF_MONTH;
+
         if (!this.params.hideHover) {
             daysOfMonth.classList.add(config.CSS_CLASS_SHOW_HOVER);
         }
@@ -100,7 +112,7 @@ export class Calendar {
             for (let j = 0; j < 7; j++) {
                 const dayOfMonth = document.createElement(config.SELECTOR_DIV);
                 dayOfMonth.className = config.CSS_CLASS_DAY_OF_MONTH;
-
+                if(!this.params.hideWeekend && (j === 0 || j === 6)) { dayOfMonth.classList.add(config.CSS_CLASS_WEEKEND); }
                 if (arrayDate[i][j] !== '') {
                     const spanDayOfMonth = document.createElement(config.SELECTOR_SPAN);
                     spanDayOfMonth.innerText = arrayDate[i][j];
@@ -125,6 +137,12 @@ export class Calendar {
         return daysOfMonth;
     }
 
+    /**
+     * Show selected date
+     * @param daySelector
+     * @param dayDate
+     */
+
     selectDate(daySelector, dayDate) {
         daySelector.addEventListener(config.EVENT_LISTENER_CLICK, () => {
             const input = document.querySelector(config.SELECTOR_INPUT_DATE_PICKER + `[data-id="${this.id}"]`);
@@ -143,6 +161,12 @@ export class Calendar {
         });
     }
 
+    /**
+     * Replace month
+     * @param inputYear
+     * @param selectMonth
+     */
+
     replaceMonth(inputYear = new Date().getFullYear(), selectMonth = new Date().getMonth()) {
         this.selectedMonth = new DateForMonth(inputYear, selectMonth);
         this.calendar.replaceChild(
@@ -151,12 +175,20 @@ export class Calendar {
         );
     }
 
+    /**
+     * Coordinates datepicker
+     * @param top
+     * @param left
+     */
     selectCoordinates(top, left) {
         this.calendar.style.top = `${top}px`;
         this.calendar.style.left = `${left}px`;
     }
 
-
+    /**
+     * Validation date in input
+     * @param dateStr
+     */
     validDate(dateStr) {
         const selectedDate = dateStr.split('-');
         const date = {};
@@ -176,6 +208,10 @@ export class Calendar {
         return date;
     }
 
+    /**
+     * Show selected date
+     * @param date
+     */
     setSelectedDate(date) {
         this.selectedDate = new DateForMonth(date.year, date.month, date.day);
         if (this.selectedMonth.getMonth() === date.month &&
@@ -187,6 +223,36 @@ export class Calendar {
             });
         }
     }
+
+    showDatepicker() {
+        this.calendar.classList.add(config.CSS_CLASS_ACTIVE);
+    }
+    /**
+     * Hide datepicker
+     * @param date
+     */
+    hideDatepicker() {
+        this.calendar.classList.remove(config.CSS_CLASS_ACTIVE);
+    }
+
+    /**
+     * Replace Month From Input
+     * @param date
+     */
+    replaceMonthFromInput(date) {
+        const validDate = this.validDate(date);
+        if (validDate.valid) {
+            this.replaceMonth(validDate.year, validDate.month, validDate.day);
+            if (!this.params.hideSelectedDate) {
+                this.setSelectedDate(validDate);
+            }
+
+            this.calendar.childNodes[0].childNodes[1].value = validDate.year;
+            this.calendar.childNodes[0].childNodes[0].value = validDate.month;
+        }
+    }
+
+
 
 }
 

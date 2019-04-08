@@ -24,6 +24,7 @@ export const config =  {
     CSS_CLASS_DAYS_OF_WEEK: 'daysOfWeek',
     CSS_CLASS_DAY_OF_WEEK: 'dayOfWeek',
     CSS_CLASS_TODAY: 'today',
+    CSS_CLASS_WEEKEND: 'weekend',
     CSS_CLASS_ACTIVE: 'active',
     CSS_CLASS_ENABLED: 'enabled',
     CSS_CLASS_SELECTED: 'selected',
@@ -33,7 +34,6 @@ export const config =  {
     CSS_ID_YEAR: 'year',
 
     ATTRIBUTE_TYPE_NUMBER: 'number',
-
 };
 
 
