@@ -92,7 +92,7 @@ document.querySelectorAll(config.SELECTOR_INPUT_DATE_PICKER).forEach((datepicker
     document.querySelector(config.SELECTOR_BODY).appendChild(calendar);
 
 
-    /* Event-listners for calendar */
+    /* Event-listeners for calendar */
 
 
     calendar.addEventListener(config.EVENT_LISTENER_MOUSEDOWN, () => {
