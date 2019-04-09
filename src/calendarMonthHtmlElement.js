@@ -1,17 +1,10 @@
-import { config } from './config';
-import { Calendar } from './calendar';
-import { Dialog } from './dialog';
+import {config} from './config';
+import {Calendar} from './calendar';
+import {Dialog} from './dialog';
+import {DateForMonth} from './dateForMonth';
 
 export class CalendarMonthHtmlElement {
-    /**
-     *
-     * @param id Id for binding with input[type="date_picker"], where data-id = id
-     * @param params hideSelectedDate - Hide display selected date,
-     * @param params hideCurrentDate - Hide display current date,
-     * @param params hideHover - Hide display hover,
-     * @param params hideWeekend - Hide display weekend
-     *
-     */
+
     constructor(id = 1, params = {}) {
         this.params = {
             hideSelectedDate: params.hideSelectedDate || false,
@@ -20,11 +13,11 @@ export class CalendarMonthHtmlElement {
             hideWeekend: params.hideWeekend || false,
         };
 
-        this.date = new Calendar();
+        this.date = new Calendar(new DateForMonth());
         this.id = id;
         this.calendar = document.createElement(config.SELECTOR_DIV);
 
-        this.calendar.className = config.CSS_CLASS_CALENDAR;
+        this.calendar.className = config.CSS_CLASS_CALENDAR_MONTH;
         this.calendar.dataset.id = this.id;
 
         const dateInputWrapper = document.createElement(config.SELECTOR_DIV);
@@ -64,7 +57,6 @@ export class CalendarMonthHtmlElement {
 
         let daysOfMonth = this.createDaysOfMonth(this.date.selectedMonth.arrayDaysInMonth());
 
-
         dateInputWrapper.appendChild(selectMonth);
 
         dateInputWrapper.appendChild(inputYear);
@@ -78,22 +70,21 @@ export class CalendarMonthHtmlElement {
         /* Add event-listeners  */
 
         selectMonth.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
-            this.replaceMonth(+inputYear.value, +selectMonth.value);
+            this.switchMonth(+inputYear.value, +selectMonth.value);
         });
 
         inputYear.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
-            this.replaceMonth(+inputYear.value, +selectMonth.value);
+            this.switchMonth(+inputYear.value, +selectMonth.value);
         });
 
-        const dialog = new Dialog();
-        document.body.appendChild(dialog.dialog);
+        this.dialog = new Dialog({
+            year: this.date.selectedDate.getFullYear(),
+            month: this.date.selectedDate.getMonth(),
+            day: this.date.selectedDate.getDate(),
+        });
+        document.body.appendChild(this.dialog.dialog);
     }
 
-    /**
-     * Create view month
-     * @param arrayDate Array[week of month][day of week] = 'date of month'
-     * @returns {HTMLDivElement}
-     */
     createDaysOfMonth(arrayDate) {
         const daysOfMonth = document.createElement(config.SELECTOR_DIV);
         daysOfMonth.className = config.CSS_CLASS_DAYS_OF_MONTH;
@@ -109,7 +100,9 @@ export class CalendarMonthHtmlElement {
             for (let j = 0; j < 7; j++) {
                 const dayOfMonth = document.createElement(config.SELECTOR_DIV);
                 dayOfMonth.className = config.CSS_CLASS_DAY_OF_MONTH;
-                if(!this.params.hideWeekend && (j === 0 || j === 6)) { dayOfMonth.classList.add(config.CSS_CLASS_WEEKEND); }
+                if (!this.params.hideWeekend && (j === 0 || j === 6)) {
+                    dayOfMonth.classList.add(config.CSS_CLASS_WEEKEND);
+                }
                 if (arrayDate[i][j] !== '') {
                     const spanDayOfMonth = document.createElement(config.SELECTOR_SPAN);
                     spanDayOfMonth.innerText = arrayDate[i][j];
@@ -134,93 +127,23 @@ export class CalendarMonthHtmlElement {
         return daysOfMonth;
     }
 
-    /**
-     * Show selected date
-     * @param daySelector
-     * @param dayDate
-     */
     selectDate(daySelector, dayDate) {
         daySelector.addEventListener(config.EVENT_LISTENER_CLICK, () => {
-
-            this.date.setSelectedDate({
+            const selectedDate = {
                 year: this.date.selectedMonth.getFullYear(),
                 month: this.date.selectedMonth.getMonth(),
                 day: dayDate
-            });
-
-            //daySelector.classList.add(config.CSS_CLASS_SELECTED);
+            };
+            this.dialog.showDialog(selectedDate);
         });
     }
 
-    /**
-     * Replace month
-     * @param inputYear
-     * @param selectMonth
-     */
-
-    replaceMonth(inputYear = new Date().getFullYear(), selectMonth = new Date().getMonth()) {
+    switchMonth(inputYear = new Date().getFullYear(), selectMonth = new Date().getMonth()) {
         this.date.replaceMonth(inputYear, selectMonth);
         this.calendar.replaceChild(
             this.createDaysOfMonth(this.date.selectedMonth.arrayDaysInMonth()),
             this.calendar.childNodes[2]
         );
-    }
-
-    /**
-     * Coordinates datepicker
-     * @param top
-     * @param left
-     */
-    selectCoordinates(top, left) {
-        this.calendar.style.top = `${top}px`;
-        this.calendar.style.left = `${left}px`;
-    }
-
-    /**
-     * Show selected date
-     * @param date
-     */
-    setSelectedDate(date) {
-        this.date.setSelectedDate(date);
-        if (this.date.selectedMonth.getMonth() === date.month &&
-            this.date.selectedMonth.getFullYear() === date.year) {
-            this.calendar.childNodes[2].querySelectorAll('.enabled').forEach((el, index) => {
-                if (index + 1 === date.day) {
-                    el.classList.add(config.CSS_CLASS_SELECTED);
-                }
-            });
-        }
-    }
-
-    /**
-     * Show datepicker
-     */
-    showDatepicker() {
-        this.calendar.classList.add(config.CSS_CLASS_ACTIVE);
-    }
-
-    /**
-     * Hide datepicker
-     */
-    hideDatepicker() {
-        this.calendar.classList.remove(config.CSS_CLASS_ACTIVE);
-    }
-
-    /**
-     * Replace month from input
-     * @param date
-     */
-    replaceMonthFromInput(date) {
-        const validDate = Calendar.validDate(date);
-        if (validDate.valid) {
-            this.replaceMonth(validDate.year, validDate.month, validDate.day);
-            if (!this.params.hideSelectedDate) {
-                this.setSelectedDate(validDate);
-            }
-
-            this.calendar.childNodes[0].childNodes[1].value = validDate.year;
-            this.calendar.childNodes[0].childNodes[0].value = validDate.month;
-        }
     }
 
 }

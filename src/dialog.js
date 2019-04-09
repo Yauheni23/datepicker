@@ -3,7 +3,7 @@ import {config} from './config';
 import {DateForMonth} from './dateForMonth';
 
 export class Dialog {
-    constructor() {
+    constructor(date) {
         this.name = 'lol';
         this.startDate = new Date();
         this.endDate = new Date();
@@ -15,7 +15,7 @@ export class Dialog {
         close.className = config.CSS_CLASS_CLOSE;
         close.innerHTML = '<i class="fas fa-times"></i>';
         close.addEventListener(config.EVENT_LISTENER_CLICK, () => {
-
+            this.hideDialog();
         });
 
         const nameTask = document.createElement(config.SELECTOR_INPUT);
@@ -25,13 +25,15 @@ export class Dialog {
         const timeTask = document.createElement(config.SELECTOR_DIV);
         timeTask.className = config.CSS_CLASS_TIME_TASK;
 
-        const startTimeDatepicker = this.createDatepicker(0);
-        startTimeDatepicker.className = config.CSS_CLASS_START_TIME_DATE_PICKER;
-
-        const endTimeDatepicker = this.createDatepicker(1, {
-            defaultDate: new DateForMonth(2015, 0, 2)
+        this.startTimeDatepicker = this.createDatepicker(0,{
+            defaultDate: new DateForMonth(date.year, date.month, date.day)
         });
-        endTimeDatepicker.className = config.CSS_CLASS_END_TIME_DATE_PICKER;
+
+        this.endTimeDatepicker = this.createDatepicker(1,{
+            defaultDate: new DateForMonth(date.year, date.month, date.day)
+        });
+
+        // this.endTimeDatepicker.className = config.CSS_CLASS_END_TIME_DATE_PICKER;
 
         const span = document.createElement(config.SELECTOR_SPAN);
         span.innerHTML = '-';
@@ -43,9 +45,9 @@ export class Dialog {
         save.innerText = 'Сохранить';
 
 
-        timeTask.appendChild(startTimeDatepicker);
+        timeTask.appendChild(this.startTimeDatepicker.wrapper);
         timeTask.appendChild(span);
-        timeTask.appendChild(endTimeDatepicker);
+        timeTask.appendChild(this.endTimeDatepicker.wrapper);
 
         this.dialog.appendChild(nameTask);
 
@@ -60,16 +62,31 @@ export class Dialog {
         const divWrapper = document.createElement(config.SELECTOR_DIV);
         divWrapper.style.position = 'relative';
 
-        const datepicker = document.createElement(config.SELECTOR_INPUT);
-        datepicker.className = config.CSS_CLASS_INPUT_TIME_DATE_PICKER;
-        datepicker.type = config.ATTRIBUTE_TYPE_DATE_PICKER;
-        datepicker.dataset.id = index;
-        divWrapper.appendChild(datepicker);
+        const inputDatepicker = document.createElement(config.SELECTOR_INPUT);
+        inputDatepicker.className = config.CSS_CLASS_INPUT_TIME_DATE_PICKER;
+        inputDatepicker.type = config.ATTRIBUTE_TYPE_DATE_PICKER;
+        inputDatepicker.dataset.id = index;
+        divWrapper.appendChild(inputDatepicker);
 
-        const calendar = new DatepickerHtmlElement(params);
-        calendar.connectWithInput(index, datepicker);
-        divWrapper.appendChild(calendar.calendar);
+        const datepicker = new DatepickerHtmlElement(params);
+        datepicker.connectWithInput(index, inputDatepicker);
+        divWrapper.appendChild(datepicker.calendar);
 
-        return divWrapper;
+        return {
+            wrapper: divWrapper,
+            datepicker: datepicker,
+            input: inputDatepicker
+        };
+    }
+
+    showDialog(date) {
+        this.startTimeDatepicker.datepicker.replaceDate(date);
+        this.endTimeDatepicker.datepicker.replaceDate(date);
+
+        this.dialog.classList.add(config.CSS_CLASS_ACTIVE_DIALOG);
+    }
+
+    hideDialog() {
+        this.dialog.classList.remove(config.CSS_CLASS_ACTIVE_DIALOG);
     }
 }

@@ -17,7 +17,7 @@ export class Calendar {
 
     static validDate(dateString) {
         const selectedDate = dateString.split('-');
-        const date = {};
+        let date = null;
 
         if ((+selectedDate[0] >= 1000)
             && (+selectedDate[0] < 9999)
@@ -25,14 +25,13 @@ export class Calendar {
             && (+selectedDate[1] <= 12)
             && (+selectedDate[2] >= 1)
             && (+selectedDate[2] <= new DateForMonth(+selectedDate[0], +selectedDate[1]).daysInMonth())) {
-
-            date.valid = true;
+            date = {};
             date.year = +selectedDate[0];
             date.month = +selectedDate[1] - 1;
             date.day = +selectedDate[2];
         }
 
-        return date;
+        return date || null;
     }
 }
 

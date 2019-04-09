@@ -19,7 +19,7 @@ export const config =  {
     EVENT_LISTENER_BLUR: 'blur',
     EVENT_LISTENER_CLICK: 'click',
 
-    CSS_CLASS_CALENDAR: 'calendar',
+    CSS_CLASS_DATE_PICKER: 'datepicker',
     CSS_CLASS_DATE_INPUT_WRAPPER: 'dateInputWrapper',
     CSS_CLASS_ROW_DAYS_OF_MONTH: 'rowDaysOfMonth',
     CSS_CLASS_DAYS_OF_MONTH: 'daysOfMonth',
@@ -29,10 +29,12 @@ export const config =  {
     CSS_CLASS_TODAY: 'today',
     CSS_CLASS_WEEKEND: 'weekend',
     CSS_CLASS_ACTIVE: 'active',
+    CSS_CLASS_ACTIVE_DIALOG: 'activeDialog',
     CSS_CLASS_ENABLED: 'enabled',
     CSS_CLASS_SELECTED: 'selected',
     CSS_CLASS_SHOW_HOVER: 'showHover',
 
+    CSS_CLASS_CALENDAR_MONTH: 'calendarMonth',
     CSS_CLASS_DIALOG: 'dialog',
     CSS_CLASS_CLOSE: 'close',
     CSS_CLASS_NAME_TASK: 'nameTask',
