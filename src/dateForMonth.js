@@ -16,7 +16,7 @@ export class DateForMonth  extends Date {
     arrayDaysInMonth() {
         const arrayDaysInMonth = [];
         const dayOfWeek = new Date(this.getFullYear(), this.getMonth()).getDay();
-        const countWeeksInMonth = (this.daysInMonth() - 7 + dayOfWeek) / 7 | 0 ;
+        const countWeeksInMonth = (this.daysInMonth() - 7 + dayOfWeek - 0.0001) / 7 | 0 ;
 
         for(let i = 0; i <= countWeeksInMonth + 1; i++) {
             arrayDaysInMonth[i] = [];

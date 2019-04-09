@@ -9,6 +9,8 @@ export const config =  {
     SELECTOR_INPUT: 'INPUT',
     SELECTOR_SPAN: 'span',
     SELECTOR_BODY: 'body',
+    SELECTOR_DIV_CALENDAR: 'div[type="calendar"]',
+
 
     EVENT_LISTENER_MOUSEDOWN: 'mousedown',
     EVENT_LISTENER_CHANGE: 'change',
@@ -29,11 +31,17 @@ export const config =  {
     CSS_CLASS_ENABLED: 'enabled',
     CSS_CLASS_SELECTED: 'selected',
     CSS_CLASS_SHOW_HOVER: 'showHover',
+    CSS_CLASS_DIALOG: 'dialog',
+    CSS_CLASS_NAME_TASK: 'nameTask',
+    CSS_CLASS_TIME_TASK: 'timeTask',
+    CSS_CLASS_START_TIME_DATE_PICKER: 'startTimeDatepicker',
+    CSS_CLASS_END_TIME_DATE_PICKER: 'endTimeDatepicker',
 
     CSS_ID_MONTH: 'month',
     CSS_ID_YEAR: 'year',
 
     ATTRIBUTE_TYPE_NUMBER: 'number',
+    ATTRIBUTE_TYPE_DATE_PICKER: 'date_picker',
 };
 
 

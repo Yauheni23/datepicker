@@ -1,7 +1,7 @@
 import { config } from './config';
 import { Calendar } from './calendar';
 
-export class DatepickerHtmlElement {
+export class CalendarMonthHtmlElement {
     /**
      *
      * @param id Id for binding with input[type="date_picker"], where data-id = id
@@ -135,30 +135,45 @@ export class DatepickerHtmlElement {
         return daysOfMonth;
     }
 
+    createDialogWindow() {
+        const dialog = document.createElement(config.SELECTOR_DIV);
+        dialog.className = config.CSS_CLASS_DIALOG;
+
+        const nameTask = document.createElement(config.SELECTOR_INPUT);
+        nameTask.className = config.CSS_CLASS_NAME_TASK;
+
+        const timeTask = document.createElement(config.SELECTOR_DIV);
+        timeTask.className = config.CSS_CLASS_TIME_TASK;
+
+        const startTimeDatepicker = document.createElement(config.SELECTOR_INPUT);
+        startTimeDatepicker.className = config.CSS_CLASS_START_TIME_DATE_PICKER;
+        startTimeDatepicker.type = config.ATTRIBUTE_TYPE_DATE_PICKER;
+
+
+        const endTimeDatepicker = document.createElement(config.SELECTOR_INPUT);
+        endTimeDatepicker.className = config.CSS_CLASS_END_TIME_DATE_PICKER;
+        endTimeDatepicker.type = config.ATTRIBUTE_TYPE_DATE_PICKER;
+    }
+
+
+    createListTasks (date) {
+        const list = document.createElement('ol');
+    }
     /**
      * Show selected date
      * @param daySelector
      * @param dayDate
      */
-
     selectDate(daySelector, dayDate) {
         daySelector.addEventListener(config.EVENT_LISTENER_CLICK, () => {
-            const input = document.querySelector(config.SELECTOR_INPUT_DATE_PICKER + `[data-id="${this.id}"]`);
 
             this.date.setSelectedDate({
                 year: this.date.selectedMonth.getFullYear(),
                 month: this.date.selectedMonth.getMonth(),
                 day: dayDate
             });
-            input.value = this.date.selectedDate.formatForInput();
 
-            const selectedDay = this.calendar.childNodes[2].querySelector(`.${config.CSS_CLASS_SELECTED}`);
-            if (selectedDay) {
-                selectedDay.classList.remove(config.CSS_CLASS_SELECTED);
-            }
-
-            daySelector.classList.add(config.CSS_CLASS_SELECTED);
-            input.blur();
+            //daySelector.classList.add(config.CSS_CLASS_SELECTED);
         });
     }
 
