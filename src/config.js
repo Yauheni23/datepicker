@@ -9,6 +9,7 @@ export const config =  {
     SELECTOR_INPUT: 'INPUT',
     SELECTOR_SPAN: 'span',
     SELECTOR_BODY: 'body',
+    SELECTOR_BUTTON: 'button',
     SELECTOR_DIV_CALENDAR: 'div[type="calendar"]',
 
 
@@ -31,11 +32,14 @@ export const config =  {
     CSS_CLASS_ENABLED: 'enabled',
     CSS_CLASS_SELECTED: 'selected',
     CSS_CLASS_SHOW_HOVER: 'showHover',
+
     CSS_CLASS_DIALOG: 'dialog',
+    CSS_CLASS_CLOSE: 'close',
     CSS_CLASS_NAME_TASK: 'nameTask',
     CSS_CLASS_TIME_TASK: 'timeTask',
     CSS_CLASS_START_TIME_DATE_PICKER: 'startTimeDatepicker',
     CSS_CLASS_END_TIME_DATE_PICKER: 'endTimeDatepicker',
+    CSS_CLASS_INPUT_TIME_DATE_PICKER: 'inputTimeDatepicker',
 
     CSS_ID_MONTH: 'month',
     CSS_ID_YEAR: 'year',

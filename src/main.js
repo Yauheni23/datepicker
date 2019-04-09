@@ -12,5 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         datepicker.appendChild(calendar.calendar);
+
     });
 });

@@ -2,9 +2,9 @@ import { DateForMonth } from './dateForMonth';
 
 export class Calendar {
 
-    constructor() {
-        this.selectedDate = null;
-        this.selectedMonth = new DateForMonth();
+    constructor(selectedDate = null) {
+        this.selectedDate = selectedDate;
+        this.selectedMonth = selectedDate || new DateForMonth();
     }
 
     replaceMonth(inputYear = new Date().getFullYear(), selectMonth = new Date().getMonth()) {
