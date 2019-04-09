@@ -11,7 +11,7 @@ export class DatepickerHtmlElement {
      * @param params hideWeekend - Hide display weekend
      *
      */
-    constructor(id = 1, params = {}) {
+    constructor(params = {}) {
         this.params = {
             hideSelectedDate: params.hideSelectedDate || false,
             hideCurrentDate: params.hideCurrentDate || false,
@@ -21,7 +21,6 @@ export class DatepickerHtmlElement {
 
         this.clickDatepicker = false;
         this.date = new Calendar();
-        this.id = id;
         this.calendar = document.createElement(config.SELECTOR_DIV);
 
         this.calendar.className = config.CSS_CLASS_CALENDAR;
@@ -88,6 +87,7 @@ export class DatepickerHtmlElement {
         inputYear.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
             this.replaceMonth(+inputYear.value, +selectMonth.value);
         });
+
     }
 
     /**
@@ -133,6 +133,29 @@ export class DatepickerHtmlElement {
             daysOfMonth.appendChild(rowDaysOfMonth);
         }
         return daysOfMonth;
+    }
+
+    connectWithInput(index) {
+        this.id = index;
+        const datepicker = document.querySelector(config.SELECTOR_INPUT_DATE_PICKER+`[data-id="${this.id}"]`);
+
+        this.selectCoordinates(datepicker.getBoundingClientRect().bottom, datepicker.getBoundingClientRect().left);
+
+        datepicker.addEventListener(config.EVENT_LISTENER_FOCUS, () => {
+            this.showDatepicker();
+        });
+
+        datepicker.addEventListener(config.EVENT_LISTENER_BLUR, () => {
+            if (this.clickDatepicker) {
+                datepicker.focus();
+            } else {
+                this.hideDatepicker();
+                this.replaceMonthFromInput(datepicker.value);
+            }
+
+            this.clickDatepicker = false;
+        });
+
     }
 
     /**
