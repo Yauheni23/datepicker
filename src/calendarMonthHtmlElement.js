@@ -108,7 +108,6 @@ export class CalendarMonthHtmlElement {
                     spanDayOfMonth.innerText = arrayDate[i][j];
 
                     this.selectDate(dayOfMonth, arrayDate[i][j]);
-
                     if (new Date().getFullYear() === this.date.selectedMonth.getFullYear()
                         && new Date().getMonth() === this.date.selectedMonth.getMonth()
                         && new Date().getDate() === +arrayDate[i][j]
@@ -129,11 +128,13 @@ export class CalendarMonthHtmlElement {
 
     selectDate(daySelector, dayDate) {
         daySelector.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+            event.stopPropagation();
             const selectedDate = {
                 year: this.date.selectedMonth.getFullYear(),
                 month: this.date.selectedMonth.getMonth(),
                 day: dayDate
             };
+            console.log(1);
             this.dialog.showDialog(selectedDate);
         });
     }

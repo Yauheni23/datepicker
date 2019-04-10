@@ -36,12 +36,16 @@ export const config =  {
 
     CSS_CLASS_CALENDAR_MONTH: 'calendarMonth',
     CSS_CLASS_DIALOG: 'dialog',
+    CSS_CLASS_OUTSIDE_DIALOG: 'outsideDialog',
     CSS_CLASS_CLOSE: 'close',
     CSS_CLASS_NAME_TASK: 'nameTask',
     CSS_CLASS_TIME_TASK: 'timeTask',
     CSS_CLASS_START_TIME_DATE_PICKER: 'startTimeDatepicker',
     CSS_CLASS_END_TIME_DATE_PICKER: 'endTimeDatepicker',
     CSS_CLASS_INPUT_TIME_DATE_PICKER: 'inputTimeDatepicker',
+    CSS_CLASS_BUTTON_ADD_TIME: 'buttonAddTime',
+    CSS_CLASS_INPUT_TIME: 'inputTime',
+    CSS_CLASS_SELECT_TIME: 'selectTime',
 
     CSS_ID_MONTH: 'month',
     CSS_ID_YEAR: 'year',
