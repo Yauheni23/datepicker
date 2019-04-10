@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll(config.SELECTOR_DIV_CALENDAR).forEach((datepicker, index) => {
         const calendar = new CalendarMonthHtmlElement(index, {
             hideSelectedDate: false,
-            hideHover: true,
+            hideHover: false,
             hideCurrentDate: false,
             hideWeekend: false
         });

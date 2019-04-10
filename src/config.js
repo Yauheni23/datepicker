@@ -44,8 +44,14 @@ export const config =  {
     CSS_CLASS_END_TIME_DATE_PICKER: 'endTimeDatepicker',
     CSS_CLASS_INPUT_TIME_DATE_PICKER: 'inputTimeDatepicker',
     CSS_CLASS_BUTTON_ADD_TIME: 'buttonAddTime',
+    CSS_CLASS_TIME_WRAPPER: 'timeWrapper',
+    CSS_CLASS_INPUT_TIME_WRAPPER: 'inputTimeWrapper',
     CSS_CLASS_INPUT_TIME: 'inputTime',
     CSS_CLASS_SELECT_TIME: 'selectTime',
+    CSS_CLASS_OPTION_TIME: 'optionTime',
+
+    CSS_CLASS_ERROR_INPUT: 'errorInput',
+    CSS_CLASS_ENTER_INPUT: 'enterInput',
 
     CSS_ID_MONTH: 'month',
     CSS_ID_YEAR: 'year',

@@ -21,6 +21,7 @@ export class DatepickerHtmlElement {
         };
 
         this.clickDatepicker = false;
+
         this.date = new Calendar(this.params.defaultDate);
 
         this.calendar = document.createElement(config.SELECTOR_DIV);
