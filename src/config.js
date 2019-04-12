@@ -1,6 +1,8 @@
 export const config =  {
     MONTH: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     DAYS_OF_WEEK: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    MONTH_CALENDAR_MONTH: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    DAYS_OF_WEEK_CALENDAR_MONTH: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
 
     SELECTOR_INPUT_DATE_PICKER: 'input[type="date_picker"]',
     SELECTOR_DIV: 'div',
@@ -28,7 +30,7 @@ export const config =  {
     CSS_CLASS_DAY_OF_WEEK: 'dayOfWeek',
     CSS_CLASS_TODAY: 'today',
     CSS_CLASS_WEEKEND: 'weekend',
-    CSS_CLASS_ACTIVE: 'active',
+    CSS_CLASS_ACTIVE: 'activeBlock',
     CSS_CLASS_ACTIVE_DIALOG: 'activeDialog',
     CSS_CLASS_ENABLED: 'enabled',
     CSS_CLASS_SELECTED: 'selected',
@@ -49,15 +51,22 @@ export const config =  {
     CSS_CLASS_INPUT_TIME: 'inputTime',
     CSS_CLASS_SELECT_TIME: 'selectTime',
     CSS_CLASS_OPTION_TIME: 'optionTime',
+    CSS_CLASS_BUTTON_TODAY: 'buttonToday',
+
+    CSS_CLASS_BUTTON_SAVE: 'buttonSave',
 
     CSS_CLASS_ERROR_INPUT: 'errorInput',
     CSS_CLASS_ENTER_INPUT: 'enterInput',
 
     CSS_ID_MONTH: 'month',
     CSS_ID_YEAR: 'year',
+    CSS_ID_MONTH_CALENDAR_MONTH: 'monthCalendarMonth',
+    CSS_ID_YEAR_CALENDAR_MONTH: 'yearCalendarMonth',
 
     ATTRIBUTE_TYPE_NUMBER: 'number',
     ATTRIBUTE_TYPE_DATE_PICKER: 'date_picker',
+
+    TEXT_BUTTON_TODAY: 'Today',
 };
 
 

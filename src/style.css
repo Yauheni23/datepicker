@@ -8,13 +8,22 @@ input {
     outline: none;
 }
 
-input[type="date_picker"]:focus {
-    display: block;
+input[type="date_picker"] {
+    display: flex;
+    height: 20px;
+    /*font-size: 15px;*/
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.48);
+    transition: 0.7s;
+}
+input[type="date_picker"]:focus, .inputTime:focus {
+    border-bottom: 1px solid rgb(0, 0, 255);
 }
 
 .datepicker {
     z-index: 1;
     padding: 5px;
+    margin-top: 5px;
     position: absolute;
     width: 250px;
     background: #ffffff;
@@ -29,8 +38,6 @@ input[type="date_picker"]:focus {
     height: 100%;
     min-height: 175px;
     background: #ffffff;
-    /*border: 1px solid black;*/
-    /*border-radius: 3px;*/
     display: block;
 }
 
@@ -51,7 +58,21 @@ input[type="date_picker"]:focus {
     background: #ffffff;
 }
 
+#monthCalendarMonth {
+    margin-right: 10px;
+    width: 100px;
+    height: 25px;
+    background: #ffffff;
+}
+
 #year {
+    border-radius: 5px;
+    padding: 2px 4px;
+    width: 70px;
+    height: 25px;
+}
+
+#yearCalendarMonth {
     border-radius: 5px;
     padding: 2px 4px;
     width: 70px;
@@ -131,7 +152,7 @@ input[type="date_picker"]:focus {
     flex-direction: column;
     background: #ffffff;
     border-radius: 5px;
-    box-shadow: 0 0 15px 1px black;
+    box-shadow: 0 0 10px #00004b;
     padding: 35px 13px 7px;
     width: 350px;
     z-index: 2;
@@ -145,7 +166,7 @@ input[type="date_picker"]:focus {
     height: 100%;
     z-index: 1;
     display: none;
-    background: rgba(0, 0, 0, 0.22);
+    background: rgba(0, 0, 0, 0.16);
 }
 
 .close {
@@ -169,7 +190,7 @@ input[type="date_picker"]:focus {
     border-bottom: 1px solid rgba(0, 0, 0, 0.48);
     height: 20px;
     padding: 3px;
-
+    transition: 0.5s;
 }
 .timeTask {
     display: flex;
@@ -193,9 +214,15 @@ input[type="date_picker"]:focus {
     font-size: 1em;
     display: none;
 }
+.buttonAddTime:hover {
+    cursor: pointer;
+}
 
 .timeWrapper {
     display: flex;
+    align-content: start;
+    height: 20px;
+    margin-top: -2px;
 }
 
 .inputTimeWrapper {
@@ -207,16 +234,19 @@ input[type="date_picker"]:focus {
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.48);
     height: 20px;
-    line-height: 0.35em;
-    width: 46px
+    width: 46px;
+    transition: 0.7s;
 }
 
 .selectTime {
     position: absolute;
+    z-index: 1;
     top: 35px;
     left: 0;
     height: 200px;
     width: 180px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px black ;
     overflow-y: scroll;
     background: #ffffff;
     display: none;
@@ -232,6 +262,21 @@ input[type="date_picker"]:focus {
 }
 .optionTime:hover {
     background: rgba(0, 0, 0, 0.11);
+    cursor: pointer;
+}
+
+.buttonToday {
+    position: absolute;
+    top: 5px;
+    left: 40px;
+    width: 135px;
+    height: 30px;
+    line-height: 1em;
+    transition: 0.5s;
+}
+
+.buttonToday:hover {
+    cursor: pointer;
 }
 
 
@@ -245,14 +290,17 @@ input[type="date_picker"]:focus {
     border-color: blue;
 }
 
-.active {
-    display: block;
+.activeBlock{
+    display: inline-block;
 }
 
 .activeDialog {
     display: flex;
 }
 
+.disabled {
+    background: rgba(128, 91, 58, 0.18);
+}
 
 
 

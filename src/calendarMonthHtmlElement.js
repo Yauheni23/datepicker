@@ -20,13 +20,22 @@ export class CalendarMonthHtmlElement {
         this.calendar.className = config.CSS_CLASS_CALENDAR_MONTH;
         this.calendar.dataset.id = this.id;
 
+        const today = document.createElement(config.SELECTOR_DIV);
+        today.className = `btn btn-outline-primary ${config.CSS_CLASS_BUTTON_TODAY}`;
+        today.innerHTML = `<span>${config.TEXT_BUTTON_TODAY}</span>`;
+        today.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+            this.goToDate();
+
+        });
+
+
         const dateInputWrapper = document.createElement(config.SELECTOR_DIV);
         dateInputWrapper.className = config.CSS_CLASS_DATE_INPUT_WRAPPER;
 
         const selectMonth = document.createElement(config.SELECTOR_SELECT);
-        selectMonth.id = config.CSS_ID_MONTH;
+        selectMonth.id = config.CSS_ID_MONTH_CALENDAR_MONTH;
 
-        config.MONTH.forEach((el, index) => {
+        config.MONTH_CALENDAR_MONTH.forEach((el, index) => {
             const option = document.createElement(config.SELECTOR_OPTION);
             option.value = `${index}`;
             option.innerText = el;
@@ -37,14 +46,14 @@ export class CalendarMonthHtmlElement {
 
         const inputYear = document.createElement(config.SELECTOR_INPUT);
 
-        inputYear.id = config.CSS_ID_YEAR;
+        inputYear.id = config.CSS_ID_YEAR_CALENDAR_MONTH;
         inputYear.type = config.ATTRIBUTE_TYPE_NUMBER;
         inputYear.value = this.date.selectedMonth.getFullYear() + '';
 
         const daysOfWeek = document.createElement(config.SELECTOR_DIV);
         daysOfWeek.className = config.CSS_CLASS_DAYS_OF_WEEK;
 
-        config.DAYS_OF_WEEK.forEach(name => {
+        config.DAYS_OF_WEEK_CALENDAR_MONTH.forEach(name => {
             const dayOfWeek = document.createElement(config.SELECTOR_DIV);
             dayOfWeek.className = config.CSS_CLASS_DAY_OF_WEEK;
 
@@ -67,6 +76,8 @@ export class CalendarMonthHtmlElement {
 
         this.calendar.appendChild(daysOfMonth);
 
+        this.calendar.appendChild(today);
+
         /* Add event-listeners  */
 
         selectMonth.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
@@ -82,7 +93,9 @@ export class CalendarMonthHtmlElement {
             month: this.date.selectedDate.getMonth(),
             day: this.date.selectedDate.getDate(),
         });
+
         document.body.appendChild(this.dialog.dialog);
+
     }
 
     createDaysOfMonth(arrayDate) {
@@ -132,9 +145,8 @@ export class CalendarMonthHtmlElement {
             const selectedDate = {
                 year: this.date.selectedMonth.getFullYear(),
                 month: this.date.selectedMonth.getMonth(),
-                day: dayDate
+                day: +dayDate
             };
-            console.log(1);
             this.dialog.showDialog(selectedDate);
         });
     }
@@ -145,6 +157,12 @@ export class CalendarMonthHtmlElement {
             this.createDaysOfMonth(this.date.selectedMonth.arrayDaysInMonth()),
             this.calendar.childNodes[2]
         );
+    }
+
+    goToDate(date = new DateForMonth()) {
+        this.calendar.childNodes[0].childNodes[0].value = date.getMonth();
+        this.calendar.childNodes[0].childNodes[1].value = date.getFullYear();
+        this.switchMonth(date.getFullYear(), date.getMonth());
     }
 
 }
