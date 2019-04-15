@@ -88,11 +88,7 @@ export class CalendarMonthHtmlElement {
             this.switchMonth(+inputYear.value, +selectMonth.value);
         });
 
-        this.dialog = new Dialog({
-            year: this.date.selectedDate.getFullYear(),
-            month: this.date.selectedDate.getMonth(),
-            day: this.date.selectedDate.getDate(),
-        });
+        this.dialog = new Dialog(this);
 
         document.body.appendChild(this.dialog.dialog);
 
@@ -153,7 +149,7 @@ export class CalendarMonthHtmlElement {
                 month: this.date.selectedMonth.getMonth(),
                 day: +dayDate
             };
-            this.dialog.showDialog(selectedDate);
+            this.dialog.showDialog(selectedDate, daySelector);
         });
     }
 
@@ -175,7 +171,30 @@ export class CalendarMonthHtmlElement {
         const div = document.createElement(config.SELECTOR_DIV);
         div.className = config.CSS_CLASS_LIST_TASK;
         const tasksOfStorage = JSON.parse(localStorage.getItem(date.formatForInput()));
-        if(tasksOfStorage) {
+        if (tasksOfStorage) {
+            const viewTask = document.createElement(config.SELECTOR_DIV);
+            viewTask.className = config.CSS_CLASS_DIALOG;
+            viewTask.classList.add(config.CSS_CLASS_VIEW_TASK);
+
+            const outsideDialog = document.createElement(config.SELECTOR_DIV);
+            outsideDialog.className = config.CSS_CLASS_OUTSIDE_DIALOG;
+            const nameSpan = document.createElement(config.SELECTOR_SPAN);
+            const startSpan = document.createElement(config.SELECTOR_SPAN);
+            const endSpan = document.createElement(config.SELECTOR_SPAN);
+
+            const deleteButton = document.createElement(config.SELECTOR_DIV);
+            deleteButton.className = config.CSS_CLASS_DELETE;
+            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+
+            const close = document.createElement(config.SELECTOR_DIV);
+            close.className = config.CSS_CLASS_CLOSE;
+            close.innerHTML = '<i class="fas fa-times"></i>';
+
+            close.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+                viewTask.classList.remove(config.CSS_CLASS_ACTIVE_DIALOG);
+                outsideDialog.classList.remove(config.CSS_CLASS_ACTIVE);
+            });
+
             tasksOfStorage.tasks.sort((a, b) =>
                 Date.parse(a.startDate) - Date.parse(b.startDate)
             );
@@ -193,16 +212,52 @@ export class CalendarMonthHtmlElement {
                 li.appendChild(span1);
                 li.appendChild(span2);
 
-                if(+el.duration === 0
+                if (+el.duration === 0
                     && new DateForMonth(Date.parse(el.startDate)).formatForInputTime() === '00:00') {
                     li.classList.add(config.CSS_CLASS_TASK_ALL_DAY);
                     li.innerHTML = '';
                     li.appendChild(span2);
                 }
+
+                li.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+                    event.stopPropagation();
+                    viewTask.classList.add(config.CSS_CLASS_ACTIVE_DIALOG);
+                    nameSpan.innerText = `Name: ${el.name}`;
+                    startSpan.innerText = `Start date: ${el.startDate}`;
+                    endSpan.innerText = `End date: ${el.endDate}`;
+
+                    outsideDialog.classList.add(config.CSS_CLASS_ACTIVE);
+                    outsideDialog.style.background = 'transparent';
+                });
+
                 div.appendChild(li);
             });
+
+            outsideDialog.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+                viewTask.classList.remove(config.CSS_CLASS_ACTIVE_DIALOG);
+                outsideDialog.classList.remove(config.CSS_CLASS_ACTIVE);
+            });
+            viewTask.appendChild(close);
+            viewTask.appendChild(deleteButton);
+            viewTask.appendChild(nameSpan);
+            viewTask.appendChild(startSpan);
+            viewTask.appendChild(endSpan);
+            document.body.appendChild(viewTask);
+            document.body.appendChild(outsideDialog);
+
         }
+
         return div;
+    }
+
+    updateDayAfterAdd(date) {
+        const div = this.showTasksForDay(date);
+        if (date.getFullYear() === this.date.selectedMonth.getFullYear()
+            && date.getMonth() === this.date.selectedMonth.getMonth()) {
+            const day = this.calendar
+                .querySelectorAll(`.${config.CSS_CLASS_DAY_OF_MONTH}.${config.CSS_CLASS_ENABLED}`)[date.getDate() - 1];
+            day.replaceChild(div, day.childNodes[1]);
+        }
     }
 }
 

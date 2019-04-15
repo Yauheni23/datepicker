@@ -156,16 +156,7 @@ input[type="date_picker"]:focus, .inputTime:focus {
     z-index: 2;
 }
 
-.outsideDialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    display: none;
-    background: rgba(0, 0, 0, 0.16);
-}
+
 
 .close {
     position: fixed;
@@ -176,6 +167,19 @@ input[type="date_picker"]:focus, .inputTime:focus {
 }
 
 .close:hover {
+    cursor: pointer;
+    color: #c30000;
+}
+
+.delete {
+    position: fixed;
+    top: 10px;
+    right: 45px;
+    text-align: right;
+    transition: 0.5s;
+}
+
+.delete:hover {
     cursor: pointer;
     color: #c30000;
 }
@@ -193,6 +197,8 @@ input[type="date_picker"]:focus, .inputTime:focus {
 .timeTask {
     display: flex;
     justify-content: space-around;
+    align-items: center;
+    height: 48px;
     width: 95%;
     padding: 4px;
 }
@@ -220,7 +226,7 @@ input[type="date_picker"]:focus, .inputTime:focus {
     display: flex;
     align-content: start;
     height: 20px;
-    margin-top: -2px;
+    margin-top: -5px;
 }
 
 .inputTimeWrapper {
@@ -307,13 +313,13 @@ input[type="date_picker"]:focus, .inputTime:focus {
 
 .task span {
     color: #5d5d5d;
-    font-size: 12px;
+    font-size: 10px;
     margin-right: 5px;
     text-align: left;
 }
 
 .task span + span{
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     margin-top: -3px;
     overflow: hidden;
@@ -328,7 +334,7 @@ input[type="date_picker"]:focus, .inputTime:focus {
 
 .taskAllDay span {
     color: #ffffff;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     transition: 0.5s;
 }
@@ -337,9 +343,31 @@ input[type="date_picker"]:focus, .inputTime:focus {
     color: black;
 }
 
+.viewTask {
+    flex-direction: column;
+    align-items: start;
+}
 
 
 
+
+
+
+.outsideDialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: none;
+    background: rgba(0, 0, 0, 0.16);
+}
+
+.error {
+    color: red;
+    display: none;
+}
 
 .errorInput {
     border-color: #c30000;
@@ -352,7 +380,7 @@ input[type="date_picker"]:focus, .inputTime:focus {
     display: inline-block;
 }
 
-.activeDialog {
+.activeDialog{
     display: flex;
 }
 

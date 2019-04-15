@@ -42,6 +42,7 @@ export const config =  {
     CSS_CLASS_DIALOG: 'dialog',
     CSS_CLASS_OUTSIDE_DIALOG: 'outsideDialog',
     CSS_CLASS_CLOSE: 'close',
+    CSS_CLASS_DELETE: 'delete',
     CSS_CLASS_NAME_TASK: 'nameTask',
     CSS_CLASS_TIME_TASK: 'timeTask',
     CSS_CLASS_START_TIME_DATE_PICKER: 'startTimeDatepicker',
@@ -60,7 +61,9 @@ export const config =  {
     CSS_CLASS_LIST_TASK: 'listTasks',
     CSS_CLASS_TASK: 'task',
     CSS_CLASS_TASK_ALL_DAY: 'taskAllDay',
+    CSS_CLASS_VIEW_TASK: 'viewTask',
 
+    CSS_CLASS_ERROR: 'error',
     CSS_CLASS_ERROR_INPUT: 'errorInput',
     CSS_CLASS_ENTER_INPUT: 'enterInput',
 
