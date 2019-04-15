@@ -199,10 +199,12 @@ export class Dialog {
 
         save.addEventListener(config.EVENT_LISTENER_CLICK, () => {
             if (nameTask.value) {
-                console.log(nameTask.value);
-                console.log(this.startDate);
-                console.log(this.endDate);
-                console.log(this.durationTask);
+                this.createTask({
+                    name: nameTask.value,
+                    startDate: this.startDate,
+                    endDate: this.endDate,
+                    duration: this.durationTask
+                });
                 this.clearDialog(div, nameTask, buttonAddTime);
             } else {
                 nameTask.classList.add(config.CSS_CLASS_ERROR_INPUT);
@@ -249,6 +251,29 @@ export class Dialog {
         };
     }
 
+    createTask(newTask) {
+        const tasksStorage = JSON.parse(localStorage.getItem(newTask.startDate.formatForInput()));
+        if(tasksStorage) {
+            const invalidDate = tasksStorage.tasks.some(el =>
+                el.startDate < newTask.startDate.toISOString() && newTask.startDate.toISOString() < el.endDate
+                || el.startDate < newTask.endDate.toISOString() && newTask.endDate.toISOString() < el.endDate
+                || el.startDate === newTask.startDate.toISOString() && newTask.endDate.toISOString() === el.endDate
+            );
+            if(invalidDate) {
+                console.log('error');
+            } else {
+                tasksStorage.tasks.push(newTask);
+                localStorage.setItem(newTask.startDate.formatForInput(), JSON.stringify(tasksStorage));
+                console.log('Done!');
+            }
+        } else {
+            localStorage.setItem(newTask.startDate.formatForInput(), JSON.stringify({
+                tasks: [newTask]
+            }));
+            console.log('Done!');
+        }
+    }
+
     editDateInDatepicker(date) {
         this.startTimeDatepicker.datepicker.replaceDate(date);
         this.endTimeDatepicker.datepicker.replaceDate(date);
@@ -278,7 +303,6 @@ export class Dialog {
     }
 
     updateDate() {
-
         this.startDate.setFullYear(this.startTimeDatepicker.datepicker.date.selectedDate.getFullYear());
         this.startDate.setMonth(this.startTimeDatepicker.datepicker.date.selectedDate.getMonth());
         this.startDate.setDate(this.startTimeDatepicker.datepicker.date.selectedDate.getDate());
@@ -287,10 +311,9 @@ export class Dialog {
         this.endDate.setMonth(this.startTimeDatepicker.datepicker.date.selectedDate.getMonth());
         this.endDate.setDate(this.startTimeDatepicker.datepicker.date.selectedDate.getDate());
 
-
-
         if(this.time) {
             this.time.end.updateTime();
+
             this.startDate.setHours(this.time.begin.hours);
             this.startDate.setMinutes(this.time.begin.minutes);
             this.endDate.setHours(this.time.begin.hours);

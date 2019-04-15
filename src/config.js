@@ -6,6 +6,8 @@ export const config =  {
 
     SELECTOR_INPUT_DATE_PICKER: 'input[type="date_picker"]',
     SELECTOR_DIV: 'div',
+    SELECTOR_UL: 'ul',
+    SELECTOR_LI: 'li',
     SELECTOR_SELECT: 'select',
     SELECTOR_OPTION: 'option',
     SELECTOR_INPUT: 'INPUT',
@@ -54,6 +56,10 @@ export const config =  {
     CSS_CLASS_BUTTON_TODAY: 'buttonToday',
 
     CSS_CLASS_BUTTON_SAVE: 'buttonSave',
+
+    CSS_CLASS_LIST_TASK: 'listTasks',
+    CSS_CLASS_TASK: 'task',
+    CSS_CLASS_TASK_ALL_DAY: 'taskAllDay',
 
     CSS_CLASS_ERROR_INPUT: 'errorInput',
     CSS_CLASS_ENTER_INPUT: 'enterInput',

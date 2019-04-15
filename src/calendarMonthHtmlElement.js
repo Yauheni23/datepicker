@@ -129,6 +129,12 @@ export class CalendarMonthHtmlElement {
                     }
                     dayOfMonth.classList.add(config.CSS_CLASS_ENABLED);
                     dayOfMonth.appendChild(spanDayOfMonth);
+
+                    dayOfMonth.appendChild(this.showTasksForDay(new DateForMonth(
+                        this.date.selectedMonth.getFullYear(),
+                        this.date.selectedMonth.getMonth(),
+                        +arrayDate[i][j]
+                    )));
                 }
 
                 rowDaysOfMonth.appendChild(dayOfMonth);
@@ -165,6 +171,39 @@ export class CalendarMonthHtmlElement {
         this.switchMonth(date.getFullYear(), date.getMonth());
     }
 
+    showTasksForDay(date) {
+        const div = document.createElement(config.SELECTOR_DIV);
+        div.className = config.CSS_CLASS_LIST_TASK;
+        const tasksOfStorage = JSON.parse(localStorage.getItem(date.formatForInput()));
+        if(tasksOfStorage) {
+            tasksOfStorage.tasks.sort((a, b) =>
+                Date.parse(a.startDate) - Date.parse(b.startDate)
+            );
+            tasksOfStorage.tasks.forEach(el => {
+                const li = document.createElement(config.SELECTOR_DIV);
+                li.className = config.CSS_CLASS_TASK;
+
+                const circle = document.createElement(config.SELECTOR_DIV);
+                circle.innerHTML = '<i class="fas fa-circle"></i>';
+                const span1 = document.createElement(config.SELECTOR_SPAN);
+                span1.innerText = `${new DateForMonth(Date.parse(el.startDate)).formatForInputTime()} `;
+                const span2 = document.createElement(config.SELECTOR_SPAN);
+                span2.innerText = ` ${el.name}`;
+                li.appendChild(circle);
+                li.appendChild(span1);
+                li.appendChild(span2);
+
+                if(+el.duration === 0
+                    && new DateForMonth(Date.parse(el.startDate)).formatForInputTime() === '00:00') {
+                    li.classList.add(config.CSS_CLASS_TASK_ALL_DAY);
+                    li.innerHTML = '';
+                    li.appendChild(span2);
+                }
+                div.appendChild(li);
+            });
+        }
+        return div;
+    }
 }
 
 
