@@ -250,11 +250,13 @@ export class Dialog {
     createTask(newTask) {
         const tasksStorage = JSON.parse(localStorage.getItem(newTask.startDate.formatForInput()));
         if (tasksStorage) {
-            const invalidDate = tasksStorage.tasks.some(el =>
-                el.startDate < newTask.startDate.toISOString() && newTask.startDate.toISOString() < el.endDate
-                || el.startDate < newTask.endDate.toISOString() && newTask.endDate.toISOString() < el.endDate
-                || el.startDate === newTask.startDate.toISOString() && newTask.endDate.toISOString() === el.endDate
-            );
+            const invalidDate = tasksStorage.tasks.some(el => {
+                return el.startDate < newTask.startDate.toISOString() && newTask.startDate.toISOString() < el.endDate
+                    || el.startDate < newTask.endDate.toISOString() && newTask.endDate.toISOString() < el.endDate
+                    || el.startDate === newTask.startDate.toISOString() && newTask.endDate.toISOString() === el.endDate
+                    || (el.startDate === newTask.startDate.toISOString() || newTask.endDate.toISOString() === el.endDate)
+                        && (el.duration !== 0 || newTask.durationTask !== 0);
+            });
             if (invalidDate) {
                 return false;
             } else {
