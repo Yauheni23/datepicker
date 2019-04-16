@@ -1,34 +1,23 @@
-import {DatepickerHtmlElement} from './datepickerHtmlElement';
-import {config} from './config';
-import {DateForMonth} from './dateForMonth';
-import {InputTime} from './inputTime';
+import { DatePicker } from './component/dialog/datePicker';
+import { config } from './config';
+import { DateForMonth } from './dateForMonth';
+import { InputTime } from './inputTime';
+import { NameTask } from './component/dialog/nameTask';
+import { OutsideDialog } from './component/dialog/outsideDialog';
+import { ButtonAddTime } from './component/dialog/buttonAddTime';
+import { Close } from './component/dialog/close';
 
 export class Dialog {
     constructor(calendar) {
         this.startDate = new DateForMonth();
         this.endDate = new DateForMonth();
-
-        this.outsideDialog = document.createElement(config.selector.DIV);
-        this.outsideDialog.className = config.css_class.OUTSIDE_DIALOG;
-
+        this.durationTask = 0;
         this.dialog = document.createElement(config.selector.DIV);
         this.dialog.className = config.css_class.DIALOG;
+        this.outsideDialog = new OutsideDialog().htmlElement;
 
-        const close = document.createElement(config.selector.DIV);
-        close.className = config.css_class.CLOSE;
-        close.innerHTML = '<i class="fas fa-times"></i>';
-
-
-        const nameTask = document.createElement(config.selector.INPUT);
-        nameTask.className = config.css_class.NAME_TASK;
-        nameTask.addEventListener(config.event_listener.CLICK, () => {
-            nameTask.classList.remove(config.css_class.ERROR_INPUT);
-            nameTask.classList.add(config.css_class.ENTER_INPUT);
-        });
-        nameTask.addEventListener(config.event_listener.BLUR, () => {
-            nameTask.classList.remove(config.css_class.ENTER_INPUT);
-        });
-        nameTask.placeholder = 'Add name and time';
+        const close = new Close().htmlElement;
+        this.nameTask = new NameTask();
 
         const timeTask = document.createElement(config.selector.DIV);
         timeTask.className = config.css_class.TIME_TASK;
@@ -43,11 +32,7 @@ export class Dialog {
 
         this.dialog.appendChild(close);
 
-        const buttonAddTime = document.createElement(config.selector.DIV);
-        buttonAddTime.className = `${config.css_class.BUTTON_ADD_TIME} ${config.css_class.ACTIVE} btn btn-outline-primary `;
-        buttonAddTime.innerHTML = '<i class="fas fa-plus"></i><span> Add time</span>';
-
-        this.durationTask = 0;
+        this.buttonAddTime = new ButtonAddTime();
 
         this.startTimeDatepicker.input.addEventListener('blur', () => {
             if (this.startTimeDatepicker.input.value !== this.startDate.formatForInput()) {
@@ -92,7 +77,7 @@ export class Dialog {
             }
         });
 
-        buttonAddTime.addEventListener(config.event_listener.CLICK, () => {
+        this.buttonAddTime.htmlElement.addEventListener(config.event_listener.CLICK, () => {
             this.time = {};
             this.durationTask = 3600000;
 
@@ -116,7 +101,7 @@ export class Dialog {
             this.enableSaveButton();
 
             this.time.begin.input.addEventListener('focus', () => {
-                if (`${this.time.begin.hours}:${this.time.begin.minutes}` !== this.startDate.formatForInputTime()) {
+                if (`${ this.time.begin.hours }:${ this.time.begin.minutes }` !== this.startDate.formatForInputTime()) {
                     console.log(new Date().setTime(this.convertInMilliseconds(+this.time.begin.hours, +this.time.begin.minutes) + this.durationTask));
                     this.time.end.input.value = new DateForMonth(this.convertInMilliseconds(+this.time.begin.hours, +this.time.begin.minutes) + this.durationTask - 3 * 3600000)
                         .formatForInputTime();
@@ -138,12 +123,11 @@ export class Dialog {
                         day: this.endDate.getDate()
                     });
 
-
                 }
             });
 
             this.time.end.input.addEventListener('focus', () => {
-                if (`${this.time.end.hours}:${this.time.end.minutes}` !== this.endDate.formatForInputTime()) {
+                if (`${ this.time.end.hours }:${ this.time.end.minutes }` !== this.endDate.formatForInputTime()) {
 
                     this.durationTask += this.convertInMilliseconds(+this.time.end.hours - +this.endDate.getHours(), +this.time.end.minutes - +this.endDate.getMinutes());
                     this.updateDate();
@@ -173,44 +157,44 @@ export class Dialog {
             timeWrapper.appendChild(this.time.end.wrapper);
             div.innerHTML = '';
             div.appendChild(timeWrapper);
-            nameTask.placeholder = 'Add name';
-            this.hideElement(buttonAddTime);
+            this.nameTask.htmlElement.placeholder = config.text.PLACEHOLDER_NAME_TASK_WITHOUT_TIME;
+            this.buttonAddTime.hideButton();
         });
 
         const save = document.createElement(config.selector.BUTTON);
-        save.className = `btn btn-success ${config.css_class.BUTTON_SAVE}`;
+        save.className = `btn btn-success ${ config.css_class.BUTTON_SAVE }`;
         save.innerText = 'Save';
         const error = document.createElement('span');
         error.innerText = 'The selected date is busy!';
         error.className = config.css_class.ERROR;
 
         close.addEventListener(config.event_listener.CLICK, () => {
-            this.clearDialog(div, nameTask, buttonAddTime, error);
+            this.clearDialog(div, error);
         });
         save.addEventListener(config.event_listener.CLICK, () => {
             this.hideElement(error);
-            if (nameTask.value) {
+            if (!this.nameTask.isEmpty()) {
                 if (this.createTask({
-                    name: nameTask.value,
+                    name: this.nameTask.htmlElement.value,
                     startDate: this.startDate,
                     endDate: this.endDate,
                     duration: this.durationTask
                 })) {
-                    this.clearDialog(div, nameTask, buttonAddTime, error);
+                    this.clearDialog(div, error);
                 } else {
                     this.showElement(error);
                 }
             } else {
-                nameTask.classList.add(config.css_class.ERROR_INPUT);
+                this.nameTask.addError();
             }
         });
 
         timeTask.appendChild(this.startTimeDatepicker.wrapper);
         timeTask.appendChild(div);
-        timeTask.appendChild(buttonAddTime);
+        timeTask.appendChild(this.buttonAddTime.htmlElement);
         timeTask.appendChild(this.endTimeDatepicker.wrapper);
 
-        this.dialog.appendChild(nameTask);
+        this.dialog.appendChild(this.nameTask.htmlElement);
 
         this.dialog.appendChild(timeTask);
 
@@ -220,7 +204,7 @@ export class Dialog {
         this.dialog.appendChild(error);
 
         this.outsideDialog.addEventListener(config.event_listener.CLICK, () => {
-            this.clearDialog(div, nameTask, buttonAddTime, error);
+            this.clearDialog(div, error);
         });
 
         document.body.appendChild(this.outsideDialog);
@@ -236,7 +220,7 @@ export class Dialog {
         inputDatepicker.dataset.id = index;
         divWrapper.appendChild(inputDatepicker);
 
-        const datepicker = new DatepickerHtmlElement(params);
+        const datepicker = new DatePicker(params);
         datepicker.connectWithInput(index, inputDatepicker);
         divWrapper.appendChild(datepicker.calendar);
 
@@ -255,7 +239,7 @@ export class Dialog {
                     || el.startDate < newTask.endDate.toISOString() && newTask.endDate.toISOString() < el.endDate
                     || el.startDate === newTask.startDate.toISOString() && newTask.endDate.toISOString() === el.endDate
                     || (el.startDate === newTask.startDate.toISOString() || newTask.endDate.toISOString() === el.endDate)
-                        && (el.duration !== 0 || newTask.durationTask !== 0);
+                    && (el.duration !== 0 || newTask.durationTask !== 0);
             });
             if (invalidDate) {
                 return false;
@@ -292,15 +276,13 @@ export class Dialog {
         this.outsideDialog.classList.remove(config.css_class.ACTIVE_DIALOG);
     }
 
-    clearDialog(div, nameTask, buttonAddTime, error) {
+    clearDialog(div, error) {
         this.hideDialog();
         this.hideElement(error);
         this.durationTask = 0;
         div.innerHTML = '';
-        nameTask.classList.remove(config.css_class.ERROR_INPUT);
-        nameTask.placeholder = 'Add name and time';
-        nameTask.value = '';
-        this.showElement(buttonAddTime);
+        this.nameTask.clear();
+        this.buttonAddTime.showButton();
     }
 
     updateDate() {
@@ -330,7 +312,7 @@ export class Dialog {
         if (this.time) {
             this.time.end.input.classList.remove('disabled');
         }
-        document.querySelector(`.${config.css_class.BUTTON_SAVE}`).disabled = false;
+        document.querySelector(`.${ config.css_class.BUTTON_SAVE }`).disabled = false;
     }
 
     disableSaveButton() {
@@ -338,7 +320,7 @@ export class Dialog {
         if (this.time) {
             this.time.end.input.classList.add('disabled');
         }
-        document.querySelector(`.${config.css_class.BUTTON_SAVE}`).disabled = true;
+        document.querySelector(`.${ config.css_class.BUTTON_SAVE }`).disabled = true;
     }
 
     showElement(elem) {

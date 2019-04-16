@@ -83,6 +83,8 @@ export const config = {
 
     text: {
         BUTTON_TODAY: 'Today',
+        PLACEHOLDER_NAME_TASK: 'Add name and time',
+        PLACEHOLDER_NAME_TASK_WITHOUT_TIME: 'Add name'
     }
 
 

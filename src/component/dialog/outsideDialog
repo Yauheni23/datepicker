@@ -1,0 +1,8 @@
+import { config } from '../../config';
+
+export class OutsideDialog {
+    constructor() {
+        this.htmlElement = document.createElement(config.selector.DIV);
+        this.htmlElement.className = config.css_class.OUTSIDE_DIALOG;
+    }
+}

@@ -1,7 +1,7 @@
-import { config } from './config';
-import { Calendar } from './calendar';
+import { config } from '../../config';
+import { Calendar } from '../../calendar';
 
-export class DatepickerHtmlElement {
+export class DatePicker {
     constructor(params = {}) {
         this.setDefaultParams(params);
         this.clickDatepicker = false;
@@ -145,6 +145,7 @@ export class DatepickerHtmlElement {
             defaultDate: params.defaultDate || null
         };
     }
+
 
     connectWithInput(index, defaultDatepicker = null) {
         this.id = index;
