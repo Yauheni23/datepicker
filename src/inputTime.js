@@ -3,24 +3,19 @@ import {DateForMonth} from './dateForMonth';
 
 export class InputTime {
     constructor(params = {}) {
-        this.params = {
-            addHours: params.addHours || 0,
-            addMinutes: params.addMinutes || 0,
-            defaultHours: params.defaultHours || null,
-            defaultMinutes: params.defaultMinutes || null,
-            useDuration: params.useDuration || false
-        };
-        this.input = document.createElement(config.SELECTOR_INPUT);
-        this.input.className = config.CSS_CLASS_INPUT_TIME;
-        this.input.addEventListener(config.EVENT_LISTENER_CLICK, () => {
-            this.select.classList.add(config.CSS_CLASS_ACTIVE);
+        this.setDefaultParams(params);
+
+        this.input = document.createElement(config.selector.INPUT);
+        this.input.className = config.css_class.INPUT_TIME;
+        this.input.addEventListener(config.event_listener.CLICK, () => {
+            this.select.classList.add(config.css_class.ACTIVE);
         });
-        this.input.addEventListener(config.EVENT_LISTENER_BLUR, () => {
-            this.select.classList.remove(config.CSS_CLASS_ACTIVE);
+        this.input.addEventListener(config.event_listener.BLUR, () => {
+            this.select.classList.remove(config.css_class.ACTIVE);
         });
 
-        this.wrapper = document.createElement(config.SELECTOR_DIV);
-        this.wrapper.classList.add(config.CSS_CLASS_INPUT_TIME_WRAPPER);
+        this.wrapper = document.createElement(config.selector.DIV);
+        this.wrapper.classList.add(config.css_class.INPUT_TIME_WRAPPER);
         this.wrapper.style.height = '20px';
 
 
@@ -40,17 +35,17 @@ export class InputTime {
     }
 
     createSelectTime(defaultHours, defaultMinutes) {
-        const select = document.createElement(config.SELECTOR_DIV);
-        select.className = config.CSS_CLASS_SELECT_TIME;
+        const select = document.createElement(config.selector.DIV);
+        select.className = config.css_class.SELECT_TIME;
         for (let i = 0; i < 48; i++) {
-            const div = document.createElement(config.SELECTOR_DIV);
-            div.className = config.CSS_CLASS_OPTION_TIME;
+            const div = document.createElement(config.selector.DIV);
+            div.className = config.css_class.OPTION_TIME;
             const time = new DateForMonth(2019, 0, 1, defaultHours, defaultMinutes)
                 .formatForInputTime((i / 2) | 0, (i % 2) * 30);
 
             div.innerHTML = `${time}${(this.params.useDuration)?' ('+i/2 +'ч.)': ''}`;
 
-            div.addEventListener(config.EVENT_LISTENER_MOUSEDOWN, () => {
+            div.addEventListener(config.event_listener.MOUSEDOWN, () => {
                 this.input.value = time;
 
                 this.updateTime();
@@ -71,13 +66,23 @@ export class InputTime {
             select,
             this.wrapper.childNodes[1]
         );
-        this.input.addEventListener(config.EVENT_LISTENER_CLICK, () => {
-            select.classList.add(config.CSS_CLASS_ACTIVE);
+        this.input.addEventListener(config.event_listener.CLICK, () => {
+            select.classList.add(config.css_class.ACTIVE);
         });
 
-        this.input.addEventListener(config.EVENT_LISTENER_BLUR, () => {
-            select.classList.remove(config.CSS_CLASS_ACTIVE);
+        this.input.addEventListener(config.event_listener.BLUR, () => {
+            select.classList.remove(config.css_class.ACTIVE);
         });
+    }
+
+    setDefaultParams(params) {
+        this.params = {
+            addHours: params.addHours || 0,
+            addMinutes: params.addMinutes || 0,
+            defaultHours: params.defaultHours || null,
+            defaultMinutes: params.defaultMinutes || null,
+            useDuration: params.useDuration || false
+        };
     }
 
     updateTime() {

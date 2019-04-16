@@ -1,17 +1,144 @@
-import {config} from './config';
-import {Calendar} from './calendar';
+import { config } from './config';
+import { Calendar } from './calendar';
 
 export class DatepickerHtmlElement {
-    /**
-     *
-     * @param id Id for binding with input[type="date_picker"], where data-id = id
-     * @param params hideSelectedDate - Hide display selected date,
-     * @param params hideCurrentDate - Hide display current date,
-     * @param params hideHover - Hide display hover,
-     * @param params hideWeekend - Hide display weekend
-     *
-     */
     constructor(params = {}) {
+        this.setDefaultParams(params);
+        this.clickDatepicker = false;
+        this.date = new Calendar(this.params.defaultDate);
+
+        this.calendar = document.createElement(config.selector.DIV);
+        this.calendar.className = config.css_class.DATE_PICKER;
+
+        this.createDatePickerHtmlElement();
+
+        this.addEventListenerForDatePicker();
+    }
+
+    createDatePickerHtmlElement() {
+        this.createDateSelectWrapperHtmlElement();
+        this.createDaysOfWeekHtmlElement();
+        this.calendar.appendChild(this.createDaysOfMonthHtmlElement(this.date.selectedMonth.arrayDaysInMonth()));
+    }
+
+    createSelectMonthHtmlElement() {
+        this.selectMonth = document.createElement(config.selector.SELECT);
+        this.selectMonth.id = config.css_id.MONTH;
+        this.selectMonth.value = this.date.selectedMonth.getMonth() + '';
+        config.MONTH.forEach((el, index) => {
+            const option = document.createElement(config.selector.OPTION);
+            option.value = `${ index }`;
+            option.innerText = el;
+            this.selectMonth.appendChild(option);
+        });
+    }
+
+    createInputYearHtmlElement() {
+        this.inputYear = document.createElement(config.selector.INPUT);
+        this.inputYear.id = config.css_id.YEAR;
+        this.inputYear.type = config.attribute.TYPE_NUMBER;
+        this.inputYear.value = this.date.selectedMonth.getFullYear() + '';
+    }
+
+    createDateSelectWrapperHtmlElement() {
+        const dateInputWrapper = document.createElement(config.selector.DIV);
+        dateInputWrapper.className = config.css_class.DATE_INPUT_WRAPPER;
+
+        this.createSelectMonthHtmlElement();
+        this.createInputYearHtmlElement();
+
+        dateInputWrapper.appendChild(this.selectMonth);
+        dateInputWrapper.appendChild(this.inputYear);
+
+        this.calendar.appendChild(dateInputWrapper);
+    }
+
+    createDaysOfWeekHtmlElement() {
+        const daysOfWeek = document.createElement(config.selector.DIV);
+        daysOfWeek.className = config.css_class.DAYS_OF_WEEK;
+
+        config.DAYS_OF_WEEK.forEach(name => {
+            const dayOfWeek = document.createElement(config.selector.DIV);
+            dayOfWeek.className = config.css_class.DAY_OF_WEEK;
+
+            const spanDayOfWeek = document.createElement(config.selector.SPAN);
+            spanDayOfWeek.innerText = name;
+
+            dayOfWeek.appendChild(spanDayOfWeek);
+            daysOfWeek.appendChild(dayOfWeek);
+        });
+
+        this.calendar.appendChild(daysOfWeek);
+    }
+
+    addEventListenerForDatePicker() {
+        this.addEventListenerForSwitchMonth(this.selectMonth);
+        this.addEventListenerForSwitchMonth(this.inputYear);
+
+        this.calendar.addEventListener(config.event_listener.MOUSEDOWN, () => {
+            this.clickDatepicker = true;
+        });
+    }
+
+    addEventListenerForSwitchMonth(element) {
+        element.addEventListener(config.event_listener.CHANGE, () => {
+            this.switchMonth(+this.inputYear.value, +this.selectMonth.value);
+        });
+    }
+
+    createDaysOfMonthHtmlElement(arrayDate) {
+        const daysOfMonth = document.createElement(config.selector.DIV);
+        daysOfMonth.className = config.css_class.DAYS_OF_MONTH;
+
+        if (!this.params.hideHover) {
+            daysOfMonth.classList.add(config.css_class.SHOW_HOVER);
+        }
+
+        for (let i = 0; i < 6; i++) {
+            const rowDaysOfMonth = document.createElement(config.selector.DIV);
+            rowDaysOfMonth.className = config.css_class.ROW_DAYS_OF_MONTH;
+
+            for (let j = 0; j < 7; j++) {
+                const dayOfMonth = document.createElement(config.selector.DIV);
+                dayOfMonth.className = config.css_class.DAY_OF_MONTH;
+
+                if (!this.params.hideWeekend && (j === 0 || j === 6)) {
+                    dayOfMonth.classList.add(config.css_class.WEEKEND);
+                }
+                const spanDayOfMonth = document.createElement(config.selector.SPAN);
+
+                dayOfMonth.appendChild(spanDayOfMonth);
+                rowDaysOfMonth.appendChild(dayOfMonth);
+            }
+
+            daysOfMonth.appendChild(rowDaysOfMonth);
+        }
+        this.fillMonth(daysOfMonth, arrayDate);
+        return daysOfMonth;
+    }
+
+    fillMonth(daysOfMonth, arrayDate) {
+        arrayDate.forEach((week, i) => {
+            daysOfMonth.childNodes[i].classList.add(config.css_class.ACTIVE_DIALOG);
+            week.forEach((day, j) => {
+                const dayHtmlElement = daysOfMonth.childNodes[i].childNodes[j];
+                dayHtmlElement.firstChild.innerText = day;
+                if (day !== '') {
+                    this.selectDateEvent(dayHtmlElement, day);
+                    if (new Date().getFullYear() === this.date.selectedMonth.getFullYear()
+                        && new Date().getMonth() === this.date.selectedMonth.getMonth()
+                        && new Date().getDate() === +arrayDate[i][j]
+                        && !this.params.hideCurrentDate) {
+                        dayHtmlElement.classList.add(config.css_class.TODAY);
+                    }
+                    dayHtmlElement.classList.add(config.css_class.ENABLED);
+                }
+            });
+        });
+
+    }
+
+    setDefaultParams(params) {
         this.params = {
             hideSelectedDate: params.hideSelectedDate || false,
             hideCurrentDate: params.hideCurrentDate || false,
@@ -19,127 +146,19 @@ export class DatepickerHtmlElement {
             hideWeekend: params.hideWeekend || false,
             defaultDate: params.defaultDate || null
         };
-
-        this.clickDatepicker = false;
-
-        this.date = new Calendar(this.params.defaultDate);
-
-        this.calendar = document.createElement(config.SELECTOR_DIV);
-        this.calendar.className = config.CSS_CLASS_DATE_PICKER;
-
-        const dateInputWrapper = document.createElement(config.SELECTOR_DIV);
-        dateInputWrapper.className = config.CSS_CLASS_DATE_INPUT_WRAPPER;
-
-        const selectMonth = document.createElement(config.SELECTOR_SELECT);
-        selectMonth.id = config.CSS_ID_MONTH;
-
-        config.MONTH.forEach((el, index) => {
-            const option = document.createElement(config.SELECTOR_OPTION);
-            option.value = `${index}`;
-            option.innerText = el;
-            selectMonth.appendChild(option);
-        });
-
-        selectMonth.value = this.date.selectedMonth.getMonth() + '';
-
-        const inputYear = document.createElement(config.SELECTOR_INPUT);
-
-        inputYear.id = config.CSS_ID_YEAR;
-        inputYear.type = config.ATTRIBUTE_TYPE_NUMBER;
-        inputYear.value = this.date.selectedMonth.getFullYear() + '';
-
-        const daysOfWeek = document.createElement(config.SELECTOR_DIV);
-        daysOfWeek.className = config.CSS_CLASS_DAYS_OF_WEEK;
-
-        config.DAYS_OF_WEEK.forEach(name => {
-            const dayOfWeek = document.createElement(config.SELECTOR_DIV);
-            dayOfWeek.className = config.CSS_CLASS_DAY_OF_WEEK;
-
-            const spanDayOfWeek = document.createElement(config.SELECTOR_SPAN);
-            spanDayOfWeek.innerText = name;
-
-            dayOfWeek.appendChild(spanDayOfWeek);
-            daysOfWeek.appendChild(dayOfWeek);
-        });
-
-        let daysOfMonth = this.createDaysOfMonth(this.date.selectedMonth.arrayDaysInMonth());
-
-        dateInputWrapper.appendChild(selectMonth);
-
-        dateInputWrapper.appendChild(inputYear);
-
-        this.calendar.appendChild(dateInputWrapper);
-
-        this.calendar.appendChild(daysOfWeek);
-
-        this.calendar.appendChild(daysOfMonth);
-
-        /* Add event-listeners  */
-
-        this.calendar.addEventListener(config.EVENT_LISTENER_MOUSEDOWN, () => {
-            this.clickDatepicker = true;
-        });
-
-        selectMonth.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
-            this.switchMonth(+inputYear.value, +selectMonth.value);
-        });
-
-        inputYear.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
-            this.switchMonth(+inputYear.value, +selectMonth.value);
-        });
-    }
-
-    createDaysOfMonth(arrayDate) {
-        const daysOfMonth = document.createElement(config.SELECTOR_DIV);
-        daysOfMonth.className = config.CSS_CLASS_DAYS_OF_MONTH;
-
-        if (!this.params.hideHover) {
-            daysOfMonth.classList.add(config.CSS_CLASS_SHOW_HOVER);
-        }
-
-        for (let i = 0; i < arrayDate.length; i++) {
-            const rowDaysOfMonth = document.createElement(config.SELECTOR_DIV);
-            rowDaysOfMonth.className = config.CSS_CLASS_ROW_DAYS_OF_MONTH;
-
-            for (let j = 0; j < 7; j++) {
-                const dayOfMonth = document.createElement(config.SELECTOR_DIV);
-                dayOfMonth.className = config.CSS_CLASS_DAY_OF_MONTH;
-
-                if (!this.params.hideWeekend && (j === 0 || j === 6)) {
-                    dayOfMonth.classList.add(config.CSS_CLASS_WEEKEND);
-                }
-                if (arrayDate[i][j] !== '') {
-                    const spanDayOfMonth = document.createElement(config.SELECTOR_SPAN);
-                    spanDayOfMonth.innerText = arrayDate[i][j];
-
-                    this.selectDateEvent(dayOfMonth, arrayDate[i][j]);
-
-                    if (new Date().getFullYear() === this.date.selectedMonth.getFullYear()
-                        && new Date().getMonth() === this.date.selectedMonth.getMonth()
-                        && new Date().getDate() === +arrayDate[i][j]
-                        && !this.params.hideCurrentDate) {
-                        dayOfMonth.classList.add(config.CSS_CLASS_TODAY);
-                    }
-                    dayOfMonth.classList.add(config.CSS_CLASS_ENABLED);
-                    dayOfMonth.appendChild(spanDayOfMonth);
-                }
-                rowDaysOfMonth.appendChild(dayOfMonth);
-            }
-
-            daysOfMonth.appendChild(rowDaysOfMonth);
-        }
-        return daysOfMonth;
     }
 
     connectWithInput(index, defaultDatepicker = null) {
         this.id = index;
-        const datepicker = defaultDatepicker || document.querySelector(config.SELECTOR_INPUT_DATE_PICKER + `[data-id="${this.id}"]`);
+        const datepicker = defaultDatepicker
+            || document.querySelector(config.selector.INPUT_DATE_PICKER
+                + `[data-id="${ this.id }"]`);
         datepicker.value = (this.date.selectedDate && this.date.selectedDate.formatForInput()) || '';
-        datepicker.addEventListener(config.EVENT_LISTENER_FOCUS, () => {
+        datepicker.addEventListener(config.event_listener.FOCUS, () => {
             this.showDatepicker();
         });
 
-        datepicker.addEventListener(config.EVENT_LISTENER_BLUR, () => {
+        datepicker.addEventListener(config.event_listener.BLUR, () => {
             if (this.clickDatepicker) {
                 datepicker.focus();
             } else {
@@ -153,8 +172,9 @@ export class DatepickerHtmlElement {
     }
 
     selectDateEvent(daySelector, dayDate) {
-        daySelector.addEventListener(config.EVENT_LISTENER_CLICK, () => {
-            const input = document.querySelector(config.SELECTOR_INPUT_DATE_PICKER + `[data-id="${this.id}"]`);
+        daySelector.addEventListener(config.event_listener.CLICK, () => {
+            const input = document.querySelector(config.selector.INPUT_DATE_PICKER
+                + `[data-id="${ this.id }"]`);
 
             this.date.setSelectedDate({
                 year: this.date.selectedMonth.getFullYear(),
@@ -163,12 +183,12 @@ export class DatepickerHtmlElement {
             });
             input.value = this.date.selectedDate.formatForInput();
 
-            const selectedDay = this.calendar.childNodes[2].querySelector(`.${config.CSS_CLASS_SELECTED}`);
+            const selectedDay = this.calendar.childNodes[2].querySelector(`.${ config.css_class.SELECTED }`);
             if (selectedDay) {
-                selectedDay.classList.remove(config.CSS_CLASS_SELECTED);
+                selectedDay.classList.remove(config.css_class.SELECTED);
             }
 
-            daySelector.classList.add(config.CSS_CLASS_SELECTED);
+            daySelector.classList.add(config.css_class.SELECTED);
             input.blur();
         });
     }
@@ -177,43 +197,36 @@ export class DatepickerHtmlElement {
         this.date.replaceMonth(inputYear, selectMonth);
 
         this.calendar.replaceChild(
-            this.createDaysOfMonth(this.date.selectedMonth.arrayDaysInMonth()),
+            this.createDaysOfMonthHtmlElement(this.date.selectedMonth.arrayDaysInMonth()),
             this.calendar.childNodes[2]
         );
     }
-
-    // selectCoordinates(top, left) {
-    //     this.calendar.style.top = `${top}px`;
-    //     this.calendar.style.left = `${left}px`;
-    // }
 
     setSelectedDateView(date) {
         this.date.setSelectedDate(date);
         if (this.date.selectedMonth.getMonth() === date.month &&
             this.date.selectedMonth.getFullYear() === date.year) {
-            this.calendar.childNodes[2].querySelectorAll('.enabled').forEach((el, index) => {
-                if (index + 1 === date.day) {
-                    el.classList.add(config.CSS_CLASS_SELECTED);
-                }
-            });
+            this.calendar.childNodes[2].querySelectorAll(`.${config.css_class.ENABLED}`)
+                .forEach((el, index) => {
+                    if (index + 1 === date.day) {
+                        el.classList.add(config.css_class.SELECTED);
+                    }
+                });
         }
     }
 
     showDatepicker() {
-        this.calendar.classList.add(config.CSS_CLASS_ACTIVE);
+        this.calendar.classList.add(config.css_class.ACTIVE);
     }
 
     hideDatepicker() {
-        this.calendar.classList.remove(config.CSS_CLASS_ACTIVE);
+        this.calendar.classList.remove(config.css_class.ACTIVE);
     }
 
-    /**
-     * Replace date in datepicker and input
-     * @param date Object = { year,month,day}
-     */
     replaceDate(date) {
         if (date) {
-            const input = document.querySelector(config.SELECTOR_INPUT_DATE_PICKER + `[data-id="${this.id}"]`);
+            const input = document.querySelector(config.selector.INPUT_DATE_PICKER
+                + `[data-id="${ this.id }"]`);
             this.switchMonth(date.year, date.month);
 
             if (!this.params.hideSelectedDate) {

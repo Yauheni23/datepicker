@@ -6,36 +6,30 @@ import {DateForMonth} from './dateForMonth';
 export class CalendarMonthHtmlElement {
 
     constructor(id = 1, params = {}) {
-        this.params = {
-            hideSelectedDate: params.hideSelectedDate || false,
-            hideCurrentDate: params.hideCurrentDate || false,
-            hideHover: params.hideHover || false,
-            hideWeekend: params.hideWeekend || false,
-        };
+        this.setDefaultParams(params);
 
         this.date = new Calendar(new DateForMonth());
         this.id = id;
-        this.calendar = document.createElement(config.SELECTOR_DIV);
+        this.calendar = document.createElement(config.selector.DIV);
 
-        this.calendar.className = config.CSS_CLASS_CALENDAR_MONTH;
+        this.calendar.className = config.css_class.CALENDAR_MONTH;
         this.calendar.dataset.id = this.id;
 
-        const today = document.createElement(config.SELECTOR_DIV);
-        today.className = `btn btn-outline-primary ${config.CSS_CLASS_BUTTON_TODAY}`;
-        today.innerHTML = `<span>${config.TEXT_BUTTON_TODAY}</span>`;
-        today.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+        const today = document.createElement(config.selector.DIV);
+        today.className = `btn btn-outline-primary ${config.css_class.BUTTON_TODAY}`;
+        today.innerHTML = `<span>${config.text.BUTTON_TODAY}</span>`;
+        today.addEventListener(config.event_listener.CLICK, () => {
             this.goToDate();
-
         });
 
-        const dateInputWrapper = document.createElement(config.SELECTOR_DIV);
-        dateInputWrapper.className = config.CSS_CLASS_DATE_INPUT_WRAPPER;
+        const dateInputWrapper = document.createElement(config.selector.DIV);
+        dateInputWrapper.className = config.css_class.DATE_INPUT_WRAPPER;
 
-        const selectMonth = document.createElement(config.SELECTOR_SELECT);
-        selectMonth.id = config.CSS_ID_MONTH_CALENDAR_MONTH;
+        const selectMonth = document.createElement(config.selector.SELECT);
+        selectMonth.id = config.css_id.MONTH_CALENDAR_MONTH;
 
         config.MONTH_CALENDAR_MONTH.forEach((el, index) => {
-            const option = document.createElement(config.SELECTOR_OPTION);
+            const option = document.createElement(config.selector.OPTION);
             option.value = `${index}`;
             option.innerText = el;
             selectMonth.appendChild(option);
@@ -43,20 +37,20 @@ export class CalendarMonthHtmlElement {
 
         selectMonth.value = this.date.selectedMonth.getMonth() + '';
 
-        const inputYear = document.createElement(config.SELECTOR_INPUT);
+        const inputYear = document.createElement(config.selector.INPUT);
 
-        inputYear.id = config.CSS_ID_YEAR_CALENDAR_MONTH;
-        inputYear.type = config.ATTRIBUTE_TYPE_NUMBER;
+        inputYear.id = config.css_id.YEAR_CALENDAR_MONTH;
+        inputYear.type = config.attribute.TYPE_NUMBER;
         inputYear.value = this.date.selectedMonth.getFullYear() + '';
 
-        const daysOfWeek = document.createElement(config.SELECTOR_DIV);
-        daysOfWeek.className = config.CSS_CLASS_DAYS_OF_WEEK;
+        const daysOfWeek = document.createElement(config.selector.DIV);
+        daysOfWeek.className = config.css_class.DAYS_OF_WEEK;
 
         config.DAYS_OF_WEEK_CALENDAR_MONTH.forEach(name => {
-            const dayOfWeek = document.createElement(config.SELECTOR_DIV);
-            dayOfWeek.className = config.CSS_CLASS_DAY_OF_WEEK;
+            const dayOfWeek = document.createElement(config.selector.DIV);
+            dayOfWeek.className = config.css_class.DAY_OF_WEEK;
 
-            const spanDayOfWeek = document.createElement(config.SELECTOR_SPAN);
+            const spanDayOfWeek = document.createElement(config.selector.SPAN);
             spanDayOfWeek.innerText = name;
 
             dayOfWeek.appendChild(spanDayOfWeek);
@@ -79,11 +73,11 @@ export class CalendarMonthHtmlElement {
 
         /* Add event-listeners  */
 
-        selectMonth.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
+        selectMonth.addEventListener(config.event_listener.CHANGE, () => {
             this.switchMonth(+inputYear.value, +selectMonth.value);
         });
 
-        inputYear.addEventListener(config.EVENT_LISTENER_CHANGE, () => {
+        inputYear.addEventListener(config.event_listener.CHANGE, () => {
             this.switchMonth(+inputYear.value, +selectMonth.value);
         });
 
@@ -94,25 +88,26 @@ export class CalendarMonthHtmlElement {
     }
 
     createDaysOfMonth(arrayDate) {
-        const daysOfMonth = document.createElement(config.SELECTOR_DIV);
-        daysOfMonth.className = config.CSS_CLASS_DAYS_OF_MONTH;
+        const daysOfMonth = document.createElement(config.selector.DIV);
+        daysOfMonth.className = config.css_class.DAYS_OF_MONTH;
 
         if (!this.params.hideHover) {
-            daysOfMonth.classList.add(config.CSS_CLASS_SHOW_HOVER);
+            daysOfMonth.classList.add(config.css_class.SHOW_HOVER);
         }
 
         for (let i = 0; i < arrayDate.length; i++) {
-            const rowDaysOfMonth = document.createElement(config.SELECTOR_DIV);
-            rowDaysOfMonth.className = config.CSS_CLASS_ROW_DAYS_OF_MONTH;
+            const rowDaysOfMonth = document.createElement(config.selector.DIV);
+            rowDaysOfMonth.className = config.css_class.ROW_DAYS_OF_MONTH;
+            rowDaysOfMonth.classList.add(config.css_class.ACTIVE_DIALOG);
 
             for (let j = 0; j < 7; j++) {
-                const dayOfMonth = document.createElement(config.SELECTOR_DIV);
-                dayOfMonth.className = config.CSS_CLASS_DAY_OF_MONTH;
+                const dayOfMonth = document.createElement(config.selector.DIV);
+                dayOfMonth.className = config.css_class.DAY_OF_MONTH;
                 if (!this.params.hideWeekend && (j === 0 || j === 6)) {
-                    dayOfMonth.classList.add(config.CSS_CLASS_WEEKEND);
+                    dayOfMonth.classList.add(config.css_class.WEEKEND);
                 }
                 if (arrayDate[i][j] !== '') {
-                    const spanDayOfMonth = document.createElement(config.SELECTOR_SPAN);
+                    const spanDayOfMonth = document.createElement(config.selector.SPAN);
                     spanDayOfMonth.innerText = arrayDate[i][j];
 
                     this.selectDate(dayOfMonth, arrayDate[i][j]);
@@ -120,9 +115,9 @@ export class CalendarMonthHtmlElement {
                         && new Date().getMonth() === this.date.selectedMonth.getMonth()
                         && new Date().getDate() === +arrayDate[i][j]
                         && !this.params.hideCurrentDate) {
-                        dayOfMonth.classList.add(config.CSS_CLASS_TODAY);
+                        dayOfMonth.classList.add(config.css_class.TODAY);
                     }
-                    dayOfMonth.classList.add(config.CSS_CLASS_ENABLED);
+                    dayOfMonth.classList.add(config.css_class.ENABLED);
                     dayOfMonth.appendChild(spanDayOfMonth);
 
                     dayOfMonth.appendChild(this.showTasksForDay(new DateForMonth(
@@ -140,8 +135,17 @@ export class CalendarMonthHtmlElement {
         return daysOfMonth;
     }
 
+    setDefaultParams(params) {
+        this.params = {
+            hideSelectedDate: params.hideSelectedDate || false,
+            hideCurrentDate: params.hideCurrentDate || false,
+            hideHover: params.hideHover || false,
+            hideWeekend: params.hideWeekend || false,
+        };
+    }
+
     selectDate(daySelector, dayDate) {
-        daySelector.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+        daySelector.addEventListener(config.event_listener.CLICK, () => {
             event.stopPropagation();
             const selectedDate = {
                 year: this.date.selectedMonth.getFullYear(),
@@ -167,78 +171,78 @@ export class CalendarMonthHtmlElement {
     }
 
     showTasksForDay(date) {
-        const div = document.createElement(config.SELECTOR_DIV);
-        div.className = config.CSS_CLASS_LIST_TASK;
+        const div = document.createElement(config.selector.DIV);
+        div.className = config.css_class.LIST_TASK;
         const tasksOfStorage = JSON.parse(localStorage.getItem(date.formatForInput()));
         if (tasksOfStorage) {
             tasksOfStorage.tasks.sort((a, b) =>
                 Date.parse(a.startDate) - Date.parse(b.startDate)
             );
-            const close = document.createElement(config.SELECTOR_DIV);
-            close.className = config.CSS_CLASS_CLOSE;
+            const close = document.createElement(config.selector.DIV);
+            close.className = config.css_class.CLOSE;
             close.innerHTML = '<i class="fas fa-times"></i>';
 
-            const viewTask = document.createElement(config.SELECTOR_DIV);
-            viewTask.className = config.CSS_CLASS_DIALOG;
-            viewTask.classList.add(config.CSS_CLASS_VIEW_TASK);
+            const viewTask = document.createElement(config.selector.DIV);
+            viewTask.className = config.css_class.DIALOG;
+            viewTask.classList.add(config.css_class.VIEW_TASK);
 
-            const outsideDialog = document.createElement(config.SELECTOR_DIV);
-            outsideDialog.className = config.CSS_CLASS_OUTSIDE_DIALOG;
-            const nameSpan = document.createElement(config.SELECTOR_SPAN);
-            const startSpan = document.createElement(config.SELECTOR_SPAN);
-            const endSpan = document.createElement(config.SELECTOR_SPAN);
+            const outsideDialog = document.createElement(config.selector.DIV);
+            outsideDialog.className = config.css_class.OUTSIDE_DIALOG;
+            const nameSpan = document.createElement(config.selector.SPAN);
+            const startSpan = document.createElement(config.selector.SPAN);
+            const endSpan = document.createElement(config.selector.SPAN);
 
-            close.addEventListener(config.EVENT_LISTENER_CLICK, () => {
-                viewTask.classList.remove(config.CSS_CLASS_ACTIVE_DIALOG);
-                outsideDialog.classList.remove(config.CSS_CLASS_ACTIVE);
+            close.addEventListener(config.event_listener.CLICK, () => {
+                viewTask.classList.remove(config.css_class.ACTIVE_DIALOG);
+                outsideDialog.classList.remove(config.css_class.ACTIVE);
             });
 
 
             tasksOfStorage.tasks.forEach(el => {
-                const li = document.createElement(config.SELECTOR_DIV);
-                li.className = config.CSS_CLASS_TASK;
+                const li = document.createElement(config.selector.DIV);
+                li.className = config.css_class.TASK;
 
-                const circle = document.createElement(config.SELECTOR_DIV);
+                const circle = document.createElement(config.selector.DIV);
                 circle.innerHTML = '<i class="fas fa-circle"></i>';
-                const span1 = document.createElement(config.SELECTOR_SPAN);
+                const span1 = document.createElement(config.selector.SPAN);
                 span1.innerText = `${new DateForMonth(Date.parse(el.startDate)).formatForInputTime()} `;
-                const span2 = document.createElement(config.SELECTOR_SPAN);
+                const span2 = document.createElement(config.selector.SPAN);
                 span2.innerText = ` ${el.name}`;
                 li.appendChild(circle);
                 li.appendChild(span1);
                 li.appendChild(span2);
 
-                const empty = document.createElement(config.SELECTOR_DIV);
+                const empty = document.createElement(config.selector.DIV);
                 viewTask.appendChild(empty);
 
                 if (+el.duration === 0
                     && new DateForMonth(Date.parse(el.startDate)).formatForInputTime() === '00:00') {
-                    li.classList.add(config.CSS_CLASS_TASK_ALL_DAY);
+                    li.classList.add(config.css_class.TASK_ALL_DAY);
                     li.innerHTML = '';
                     li.appendChild(span2);
                 }
 
-                li.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+                li.addEventListener(config.event_listener.CLICK, () => {
                     event.stopPropagation();
 
-                    const deleteButton = document.createElement(config.SELECTOR_DIV);
-                    deleteButton.className = config.CSS_CLASS_DELETE;
+                    const deleteButton = document.createElement(config.selector.DIV);
+                    deleteButton.className = config.css_class.DELETE;
                     deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
 
-                    viewTask.classList.add(config.CSS_CLASS_ACTIVE_DIALOG);
+                    viewTask.classList.add(config.css_class.ACTIVE_DIALOG);
                     nameSpan.innerText = `Name: ${el.name}`;
                     startSpan.innerText = `Start date: ${new DateForMonth(Date.parse(el.startDate))}`;
                     if (el.duration !== 0) {
                         endSpan.innerText = `End date: ${new DateForMonth(Date.parse(el.endDate))}`;
                     }
 
-                    outsideDialog.classList.add(config.CSS_CLASS_ACTIVE);
+                    outsideDialog.classList.add(config.css_class.ACTIVE);
                     outsideDialog.style.background = 'transparent';
 
-                    deleteButton.addEventListener(config.EVENT_LISTENER_CLICK, () => {
+                    deleteButton.addEventListener(config.event_listener.CLICK, () => {
                         const dateOfLocalStorage = new DateForMonth(Date.parse(el.startDate)).formatForInput();
                         const taskOfDay = JSON.parse(localStorage.getItem(dateOfLocalStorage));
-                        if(taskOfDay.tasks.length > 1) {
+                        if (taskOfDay.tasks.length > 1) {
                             const indexOfRemove = taskOfDay.tasks.findIndex(elementOfRemove => {
                                 return elementOfRemove.name === el.name
                                     && elementOfRemove.startDate === el.startDate
@@ -250,8 +254,8 @@ export class CalendarMonthHtmlElement {
                         } else {
                             localStorage.removeItem(dateOfLocalStorage);
                         }
-                        viewTask.classList.remove(config.CSS_CLASS_ACTIVE_DIALOG);
-                        outsideDialog.classList.remove(config.CSS_CLASS_ACTIVE);
+                        viewTask.classList.remove(config.css_class.ACTIVE_DIALOG);
+                        outsideDialog.classList.remove(config.css_class.ACTIVE);
                         this.updateDayAfterAdd(new DateForMonth(Date.parse(el.startDate)));
                     });
 
@@ -262,9 +266,9 @@ export class CalendarMonthHtmlElement {
                 div.appendChild(li);
             });
 
-            outsideDialog.addEventListener(config.EVENT_LISTENER_CLICK, () => {
-                viewTask.classList.remove(config.CSS_CLASS_ACTIVE_DIALOG);
-                outsideDialog.classList.remove(config.CSS_CLASS_ACTIVE);
+            outsideDialog.addEventListener(config.event_listener.CLICK, () => {
+                viewTask.classList.remove(config.css_class.ACTIVE_DIALOG);
+                outsideDialog.classList.remove(config.css_class.ACTIVE);
             });
 
             viewTask.appendChild(close);
@@ -285,7 +289,7 @@ export class CalendarMonthHtmlElement {
         if (date.getFullYear() === this.date.selectedMonth.getFullYear()
             && date.getMonth() === this.date.selectedMonth.getMonth()) {
             const day = this.calendar
-                .querySelectorAll(`.${config.CSS_CLASS_DAY_OF_MONTH}.${config.CSS_CLASS_ENABLED}`)[date.getDate() - 1];
+                .querySelectorAll(`.${config.css_class.DAY_OF_MONTH}.${config.css_class.ENABLED}`)[date.getDate() - 1];
             day.replaceChild(div, day.childNodes[1]);
         }
     }

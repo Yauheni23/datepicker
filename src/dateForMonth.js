@@ -1,18 +1,10 @@
 export class DateForMonth  extends Date {
-    /**
-     * Returns number of days in the month
-     * @returns {number}
-     */
     daysInMonth() {
         const NUMBER_FOR_COUNT_DAYS_IN_MONTH = 33;
         return NUMBER_FOR_COUNT_DAYS_IN_MONTH
             - new Date(this.getFullYear(), this.getMonth(), NUMBER_FOR_COUNT_DAYS_IN_MONTH).getDate();
     }
 
-    /**
-     * Returns Array[week of month][day of week] = 'date of month'
-     * @returns {Array}
-     */
     arrayDaysInMonth() {
         const arrayDaysInMonth = [];
         const dayOfWeek = new Date(this.getFullYear(), this.getMonth()).getDay();
@@ -30,10 +22,6 @@ export class DateForMonth  extends Date {
         return arrayDaysInMonth;
     }
 
-    /**
-     * Returns date format yyyy-mm-dd
-     * @returns {string}
-     */
     formatForInput(){
         let month = this.getMonth() + 1;
         let day = this.getDate();
