@@ -3,6 +3,7 @@ export const config = {
     DAYS_OF_WEEK: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
     MONTH_CALENDAR_MONTH: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
     DAYS_OF_WEEK_CALENDAR_MONTH: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
+    NUMBER_FOR_COUNT_DAYS_IN_MONTH: 33,
 
     selector: {
         INPUT_DATE_PICKER: 'input[type="date_picker"]',
@@ -35,8 +36,9 @@ export const config = {
         TODAY: 'today',
         WEEKEND: 'weekend',
         ACTIVE: 'activeBlock',
-        ACTIVE_DIALOG: 'activeDialog',
+        ACTIVE_FLEX: 'activeDialog',
         ENABLED: 'enabled',
+        DISABLED: 'disabled',
         SELECTED: 'selected',
         SHOW_HOVER: 'showHover',
 
@@ -57,8 +59,8 @@ export const config = {
         SELECT_TIME: 'selectTime',
         OPTION_TIME: 'optionTime',
         BUTTON_TODAY: 'buttonToday',
-
         BUTTON_SAVE: 'buttonSave',
+        WRAPPER_SAVE: 'wrapperSave',
 
         LIST_TASK: 'listTasks',
         TASK: 'task',
@@ -84,7 +86,9 @@ export const config = {
     text: {
         BUTTON_TODAY: 'Today',
         PLACEHOLDER_NAME_TASK: 'Add name and time',
-        PLACEHOLDER_NAME_TASK_WITHOUT_TIME: 'Add name'
+        PLACEHOLDER_NAME_TASK_WITHOUT_TIME: 'Add name',
+        BUTTON_SAVE: 'Save',
+        BUTTON_SAVE_ERROR_MESSAGE: 'The selected date is busy!'
     }
 
 

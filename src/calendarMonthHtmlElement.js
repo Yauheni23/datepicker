@@ -1,7 +1,7 @@
-import {config} from './config';
-import {Calendar} from './calendar';
-import {Dialog} from './dialog';
-import {DateForMonth} from './dateForMonth';
+import { config } from './config';
+import { Calendar } from './calendar';
+import { DialogForAddTask } from './dialogForAddTask';
+import { DateForMonth } from './dateForMonth';
 
 export class CalendarMonthHtmlElement {
 
@@ -16,8 +16,8 @@ export class CalendarMonthHtmlElement {
         this.calendar.dataset.id = this.id;
 
         const today = document.createElement(config.selector.DIV);
-        today.className = `btn btn-outline-primary ${config.css_class.BUTTON_TODAY}`;
-        today.innerHTML = `<span>${config.text.BUTTON_TODAY}</span>`;
+        today.className = `btn btn-outline-primary ${ config.css_class.BUTTON_TODAY }`;
+        today.innerHTML = `<span>${ config.text.BUTTON_TODAY }</span>`;
         today.addEventListener(config.event_listener.CLICK, () => {
             this.goToDate();
         });
@@ -30,7 +30,7 @@ export class CalendarMonthHtmlElement {
 
         config.MONTH_CALENDAR_MONTH.forEach((el, index) => {
             const option = document.createElement(config.selector.OPTION);
-            option.value = `${index}`;
+            option.value = `${ index }`;
             option.innerText = el;
             selectMonth.appendChild(option);
         });
@@ -81,9 +81,13 @@ export class CalendarMonthHtmlElement {
             this.switchMonth(+inputYear.value, +selectMonth.value);
         });
 
-        this.dialog = new Dialog(this);
+        this.calendar.addEventListener('save', () => {
+            this.updateDayAfterAdd(event.detail.startDate);
+        });
 
-        document.body.appendChild(this.dialog.dialog);
+        this.dialog = new DialogForAddTask();
+
+        document.body.appendChild(this.dialog.component);
 
     }
 
@@ -98,7 +102,7 @@ export class CalendarMonthHtmlElement {
         for (let i = 0; i < arrayDate.length; i++) {
             const rowDaysOfMonth = document.createElement(config.selector.DIV);
             rowDaysOfMonth.className = config.css_class.ROW_DAYS_OF_MONTH;
-            rowDaysOfMonth.classList.add(config.css_class.ACTIVE_DIALOG);
+            rowDaysOfMonth.classList.add(config.css_class.ACTIVE_FLEX);
 
             for (let j = 0; j < 7; j++) {
                 const dayOfMonth = document.createElement(config.selector.DIV);
@@ -183,7 +187,7 @@ export class CalendarMonthHtmlElement {
             close.innerHTML = '<i class="fas fa-times"></i>';
 
             const viewTask = document.createElement(config.selector.DIV);
-            viewTask.className = config.css_class.DIALOG;
+            //viewTask.className = config.css_class.DIALOG;
             viewTask.classList.add(config.css_class.VIEW_TASK);
 
             const outsideDialog = document.createElement(config.selector.DIV);
@@ -193,10 +197,9 @@ export class CalendarMonthHtmlElement {
             const endSpan = document.createElement(config.selector.SPAN);
 
             close.addEventListener(config.event_listener.CLICK, () => {
-                viewTask.classList.remove(config.css_class.ACTIVE_DIALOG);
+                viewTask.classList.remove(config.css_class.ACTIVE_FLEX);
                 outsideDialog.classList.remove(config.css_class.ACTIVE);
             });
-
 
             tasksOfStorage.tasks.forEach(el => {
                 const li = document.createElement(config.selector.DIV);
@@ -205,9 +208,9 @@ export class CalendarMonthHtmlElement {
                 const circle = document.createElement(config.selector.DIV);
                 circle.innerHTML = '<i class="fas fa-circle"></i>';
                 const span1 = document.createElement(config.selector.SPAN);
-                span1.innerText = `${new DateForMonth(Date.parse(el.startDate)).formatForInputTime()} `;
+                span1.innerText = `${ new DateForMonth(Date.parse(el.startDate)).formatForInputTime() } `;
                 const span2 = document.createElement(config.selector.SPAN);
-                span2.innerText = ` ${el.name}`;
+                span2.innerText = ` ${ el.name }`;
                 li.appendChild(circle);
                 li.appendChild(span1);
                 li.appendChild(span2);
@@ -229,11 +232,11 @@ export class CalendarMonthHtmlElement {
                     deleteButton.className = config.css_class.DELETE;
                     deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
 
-                    viewTask.classList.add(config.css_class.ACTIVE_DIALOG);
-                    nameSpan.innerText = `Name: ${el.name}`;
-                    startSpan.innerText = `Start date: ${new DateForMonth(Date.parse(el.startDate))}`;
+                    viewTask.classList.add(config.css_class.ACTIVE_FLEX);
+                    nameSpan.innerText = `Name: ${ el.name }`;
+                    startSpan.innerText = `Start date: ${ new DateForMonth(Date.parse(el.startDate)) }`;
                     if (el.duration !== 0) {
-                        endSpan.innerText = `End date: ${new DateForMonth(Date.parse(el.endDate))}`;
+                        endSpan.innerText = `End date: ${ new DateForMonth(Date.parse(el.endDate)) }`;
                     }
 
                     outsideDialog.classList.add(config.css_class.ACTIVE);
@@ -254,7 +257,7 @@ export class CalendarMonthHtmlElement {
                         } else {
                             localStorage.removeItem(dateOfLocalStorage);
                         }
-                        viewTask.classList.remove(config.css_class.ACTIVE_DIALOG);
+                        viewTask.classList.remove(config.css_class.ACTIVE_FLEX);
                         outsideDialog.classList.remove(config.css_class.ACTIVE);
                         this.updateDayAfterAdd(new DateForMonth(Date.parse(el.startDate)));
                     });
@@ -267,7 +270,7 @@ export class CalendarMonthHtmlElement {
             });
 
             outsideDialog.addEventListener(config.event_listener.CLICK, () => {
-                viewTask.classList.remove(config.css_class.ACTIVE_DIALOG);
+                viewTask.classList.remove(config.css_class.ACTIVE_FLEX);
                 outsideDialog.classList.remove(config.css_class.ACTIVE);
             });
 
@@ -284,12 +287,11 @@ export class CalendarMonthHtmlElement {
     }
 
     updateDayAfterAdd(date) {
-        console.log(date);
         const div = this.showTasksForDay(date);
         if (date.getFullYear() === this.date.selectedMonth.getFullYear()
             && date.getMonth() === this.date.selectedMonth.getMonth()) {
             const day = this.calendar
-                .querySelectorAll(`.${config.css_class.DAY_OF_MONTH}.${config.css_class.ENABLED}`)[date.getDate() - 1];
+                .querySelectorAll(`.${ config.css_class.DAY_OF_MONTH }.${ config.css_class.ENABLED }`)[date.getDate() - 1];
             day.replaceChild(div, day.childNodes[1]);
         }
     }

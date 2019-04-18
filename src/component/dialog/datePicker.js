@@ -1,10 +1,11 @@
 import { config } from '../../config';
 import { Calendar } from '../../calendar';
+import { DateForMonth } from '../../dateForMonth';
 
 export class DatePicker {
     constructor(params = {}) {
         this.setDefaultParams(params);
-        this.clickDatepicker = false;
+        this.clickdatePicker = false;
         this.date = new Calendar(this.params.defaultDate);
 
         this.calendar = document.createElement(config.selector.DIV);
@@ -13,6 +14,15 @@ export class DatePicker {
         this.createDatePickerHtmlElement();
 
         this.addEventListenerForDatePicker();
+    }
+
+    set selectedDate(date) {
+        this.date.selectedDate = new DateForMonth(date);
+        this.replaceDate({
+            year: this.date.selectedDate.getFullYear(),
+            month: this.date.selectedDate.getMonth(),
+            day: this.date.selectedDate.getDate(),
+        });
     }
 
     createDatePickerHtmlElement() {
@@ -117,7 +127,7 @@ export class DatePicker {
 
     fillMonth(daysOfMonth, arrayDate) {
         arrayDate.forEach((week, i) => {
-            daysOfMonth.childNodes[i].classList.add(config.css_class.ACTIVE_DIALOG);
+            daysOfMonth.childNodes[i].classList.add(config.css_class.ACTIVE_FLEX);
             week.forEach((day, j) => {
                 const dayHtmlElement = daysOfMonth.childNodes[i].childNodes[j];
                 dayHtmlElement.firstChild.innerText = day;

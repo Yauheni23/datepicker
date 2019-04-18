@@ -117,7 +117,7 @@ export class DatepickerHtmlElement {
 
     fillMonth(daysOfMonth, arrayDate) {
         arrayDate.forEach((week, i) => {
-            daysOfMonth.childNodes[i].classList.add(config.css_class.ACTIVE_DIALOG);
+            daysOfMonth.childNodes[i].classList.add(config.css_class.ACTIVE_FLEX);
             week.forEach((day, j) => {
                 const dayHtmlElement = daysOfMonth.childNodes[i].childNodes[j];
                 dayHtmlElement.firstChild.innerText = day;
