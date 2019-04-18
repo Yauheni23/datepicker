@@ -1,7 +1,6 @@
 import { DateForMonth } from './dateForMonth';
 
 export class Calendar {
-
   constructor(selectedDate = null) {
     this.selectedDate = selectedDate;
     this.selectedMonth = selectedDate || new DateForMonth();

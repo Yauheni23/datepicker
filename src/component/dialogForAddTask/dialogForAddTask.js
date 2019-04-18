@@ -1,10 +1,10 @@
-import { DatePicker } from './component/dialog/datePicker';
-import { config } from './config';
-import { DateForMonth } from './dateForMonth';
-import { NameTask } from './component/dialog/nameTask';
-import { Dialog } from './component/dialog/dialog';
-import { AddTime } from './component/dialog/AddTime';
-import { Save } from './component/dialog/save';
+import { DatePicker } from './datePicker';
+import { config} from '../../config';
+import { DateForMonth} from '../../dateForMonth';
+import { NameTask } from './nameTask';
+import { Dialog} from '../dialog/dialog';
+import { AddTime } from './AddTime';
+import { Save } from './save';
 
 export class DialogForAddTask extends Dialog {
   constructor(params = {}) {

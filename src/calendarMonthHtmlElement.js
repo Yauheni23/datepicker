@@ -1,7 +1,7 @@
 import { config } from './config';
 import { Calendar } from './calendar';
-import { DialogForAddTask } from './dialogForAddTask';
 import { DateForMonth } from './dateForMonth';
+import { DialogForAddTask } from './component/dialogForAddTask/dialogForAddTask';
 
 export class CalendarMonthHtmlElement {
 
