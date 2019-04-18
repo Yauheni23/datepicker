@@ -81,21 +81,6 @@ export class DatePicker {
     this.calendar.appendChild(daysOfWeek);
   }
 
-  addEventListenerForDatePicker() {
-    this.addEventListenerForSwitchMonth(this.selectMonth);
-    this.addEventListenerForSwitchMonth(this.inputYear);
-
-    this.calendar.addEventListener(config.event_listener.MOUSEDOWN, () => {
-      this.clickDatepicker = true;
-    });
-  }
-
-  addEventListenerForSwitchMonth(element) {
-    element.addEventListener(config.event_listener.CHANGE, () => {
-      this.switchMonth(+this.inputYear.value, +this.selectMonth.value);
-    });
-  }
-
   createDaysOfMonthHtmlElement(arrayDate) {
     const daysOfMonth = document.createElement(config.selector.DIV);
     daysOfMonth.className = config.css_class.DAYS_OF_MONTH;
@@ -142,6 +127,21 @@ export class DatePicker {
           dayHtmlElement.classList.add(config.css_class.ENABLED);
         }
       });
+    });
+  }
+
+  addEventListenerForDatePicker() {
+    this.addEventListenerForSwitchMonth(this.selectMonth);
+    this.addEventListenerForSwitchMonth(this.inputYear);
+
+    this.calendar.addEventListener(config.event_listener.MOUSEDOWN, () => {
+      this.clickDatepicker = true;
+    });
+  }
+
+  addEventListenerForSwitchMonth(element) {
+    element.addEventListener(config.event_listener.CHANGE, () => {
+      this.switchMonth(+this.inputYear.value, +this.selectMonth.value);
     });
   }
 

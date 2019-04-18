@@ -47,5 +47,4 @@ export class Save {
   setDataForSave(data) {
     this.data = data;
   }
-
 }

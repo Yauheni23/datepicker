@@ -46,7 +46,7 @@ export const config = {
     DIALOG: 'dialog',
     OUTSIDE_DIALOG: 'outsideDialog',
     CLOSE: 'close',
-    DELETE: 'delete',
+    DELETE_TASK: 'deleteTask',
     NAME_TASK: 'nameTask',
     TIME_TASK: 'timeTask',
     START_TIME_DATE_PICKER: 'startTimeDatepicker',
