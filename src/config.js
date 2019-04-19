@@ -4,6 +4,8 @@ export const config = {
   MONTH_CALENDAR_MONTH: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   DAYS_OF_WEEK_CALENDAR_MONTH: ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'],
   NUMBER_FOR_COUNT_DAYS_IN_MONTH: 33,
+  API_KEY: 'e5eb129d-cb73-43b6-b846-68a2f6014f4e',
+  GOOGLE_MAPS: 'https://geocode-maps.yandex.ru/1.x/',
 
   selector: {
     INPUT_DATE_PICKER: 'input[type="date_picker"]',

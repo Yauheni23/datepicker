@@ -2,6 +2,7 @@ import { Dialog } from '../dialog/dialog';
 import { config } from '../../config';
 import { DeleteTask } from './deleteTask';
 import { DateForMonth } from '../../dateForMonth';
+import getNameLocation from '../../location/getNameLocation';
 
 export class DialogForViewTask extends Dialog {
   constructor() {
@@ -12,6 +13,9 @@ export class DialogForViewTask extends Dialog {
     this.endDate = document.createElement(config.selector.SPAN);
 
     this.deleteTask = new DeleteTask();
+    getNameLocation().then(x => {
+      this.сity = x;
+    });
 
     this.dialog.appendChild(this.deleteTask.component);
     this.dialog.appendChild(this.name);
@@ -54,12 +58,14 @@ export class DialogForViewTask extends Dialog {
   }
 
   fillDialog() {
-    this.name.innerText = `${config.text.DIALOG_NAME}: ${ this.selectedElement.name }`;
+    this.name.innerText = `${ config.text.DIALOG_NAME }: ${ this.selectedElement.name }`;
     this.startDate.innerText =
-      `${config.text.DIALOG_START_DATE}: ${ new DateForMonth(Date.parse(this.selectedElement.startDate)) }`;
+      `${ config.text.DIALOG_START_DATE }: ${ new DateForMonth(Date.parse(this.selectedElement.startDate))
+        .toLocaleString()} (${this.сity})`;
     if (this.selectedElement.duration !== 0) {
       this.endDate.innerText =
-        `${config.text.DIALOG_END_DATE}: ${ new DateForMonth(Date.parse(this.selectedElement.endDate)) }`;
+        `${ config.text.DIALOG_END_DATE }: ${ new DateForMonth(Date.parse(this.selectedElement.endDate))
+          .toLocaleString()} (${this.сity})`;
     } else {
       this.endDate.innerText = '';
     }

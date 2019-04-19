@@ -164,7 +164,7 @@ input[type="date_picker"]:focus, .inputTime:focus {
     top: 10px;
     right: 10px;
     text-align: right;
-    transition: 0.5s;
+    transition: 0.25s;
 }
 
 .close:hover {

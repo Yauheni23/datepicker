@@ -1,0 +1,35 @@
+<html>
+<head>
+</head>
+<body>
+<script>
+  function get(url) {
+    return new Promise(function (succeed, fail) {
+      var request = new XMLHttpRequest();
+      request.open('GET', url, true);
+      request.addEventListener('load', function () {
+        if (request.status < 400)
+          succeed(request.response);
+        else
+          fail(new Error('Request failed: ' + request.statusText));
+      });
+      request.addEventListener('error', function () {
+        fail(new Error('Network error'));
+      });
+      request.send();
+    });
+  }
+</script>
+<script>
+  navigator.geolocation.getCurrentPosition(result => {
+    console.log();
+    console.log();
+    get(`https://geocode-maps.yandex.ru/1.x/?apikey=e5eb129d-cb73-43b6-b846-68a2f6014f4e&format=json&geocode=${ result.coords.longitude },${ result.coords.latitude }`)
+      .then(res => {
+        const location = JSON.parse(res);
+        console.log(location.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName);
+      });
+  });
+</script>
+</body>
+</html>
