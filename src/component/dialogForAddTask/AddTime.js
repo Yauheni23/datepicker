@@ -6,8 +6,8 @@ export class AddTime {
     this.component = document.createElement(config.selector.DIV);
 
     this.button = document.createElement(config.selector.BUTTON);
-    this.button.className = `${ config.css_class.BUTTON_ADD_TIME } btn btn-outline-primary `;
-    this.button.innerHTML = '<span><i class="fas fa-plus"></i> Add time</span>';
+    this.button.className = `${ config.css_class.BUTTON_ADD_TIME } ${config.css_class.bootstrap.BTN_OUTLINE_PRIMARY}`;
+    this.button.innerHTML = config.text.BUTTON_ADD_TIME;
 
     this.button.addEventListener(config.event_listener.CLICK, () => {
       this.createComponentForTime();

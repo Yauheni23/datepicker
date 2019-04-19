@@ -1,8 +1,8 @@
 import { DatePicker } from './datePicker';
-import { config} from '../../config';
-import { DateForMonth} from '../../dateForMonth';
+import { config } from '../../config';
+import { DateForMonth } from '../../dateForMonth';
 import { NameTask } from './nameTask';
-import { Dialog} from '../dialog/dialog';
+import { Dialog } from '../dialog/dialog';
 import { AddTime } from './AddTime';
 import { Save } from './save';
 
@@ -65,23 +65,23 @@ export class DialogForAddTask extends Dialog {
   }
 
   createDatepicker(index, params = {}) {
-    const divWrapper = document.createElement(config.selector.DIV);
-    divWrapper.style.position = 'relative';
+    const datePickerWrapper = document.createElement(config.selector.DIV);
+    datePickerWrapper.className = config.css_class.DATE_PICKER_WRAPPER;
 
-    const inputDatepicker = document.createElement(config.selector.INPUT);
-    inputDatepicker.className = config.css_class.INPUT_TIME_DATE_PICKER;
-    inputDatepicker.type = config.attribute.TYPE_DATE_PICKER;
-    inputDatepicker.dataset.id = index;
-    divWrapper.appendChild(inputDatepicker);
+    const inputDatePicker = document.createElement(config.selector.INPUT);
+    inputDatePicker.className = config.css_class.INPUT_TIME_DATE_PICKER;
+    inputDatePicker.type = config.attribute.TYPE_DATE_PICKER;
+    inputDatePicker.dataset.id = index;
+    datePickerWrapper.appendChild(inputDatePicker);
 
-    const datepicker = new DatePicker(params);
-    datepicker.connectWithInput(index, inputDatepicker);
-    divWrapper.appendChild(datepicker.calendar);
+    const datePicker = new DatePicker(params);
+    datePicker.connectWithInput(index, inputDatePicker);
+    datePickerWrapper.appendChild(datePicker.calendar);
 
     return {
-      wrapper: divWrapper,
-      datepicker: datepicker,
-      input: inputDatepicker
+      wrapper: datePickerWrapper,
+      datepicker: datePicker,
+      input: inputDatePicker
     };
   }
 
@@ -104,7 +104,6 @@ export class DialogForAddTask extends Dialog {
   addClickInButtonAddTime() {
     this.timeForTaskComponent.button.addEventListener(config.event_listener.CLICK, () => {
       this.duration = 3600000;
-      this.enableSaveButton();
 
       this.addFocusInStartTime();
       this.addFocusInEndTime();
@@ -322,6 +321,7 @@ export class DialogForAddTask extends Dialog {
     this.durationTask = duration;
     this.updateDate();
     this.endDatePicker.datepicker.selectedDate = this.endDate.setMilliseconds(0);
+    this.isValidDurationForSave();
   }
 
   updateEndDatePicker() {

@@ -29,7 +29,7 @@ export class CalendarMonthHtmlElement {
 
   createButtonToday() {
     const today = document.createElement(config.selector.DIV);
-    today.className = `btn btn-outline-primary ${ config.css_class.BUTTON_TODAY }`;
+    today.className = `${config.css_class.bootstrap.BTN_OUTLINE_PRIMARY} ${ config.css_class.BUTTON_TODAY }`;
     today.innerHTML = `<span>${ config.text.BUTTON_TODAY }</span>`;
     today.addEventListener(config.event_listener.CLICK, () => {
       this.goToDate();
@@ -162,11 +162,11 @@ export class CalendarMonthHtmlElement {
       this.switchMonth(+this.inputYear.value, +this.selectMonth.value);
     });
 
-    this.calendar.addEventListener('save', () => {
+    this.calendar.addEventListener(config.custom_event.SAVE, () => {
       this.updateDayAfterAdd(event.detail.startDate);
     });
 
-    this.calendar.addEventListener('delete', () => {
+    this.calendar.addEventListener(config.custom_event.DELETE, () => {
       this.updateDayAfterAdd(event.detail.startDate);
     });
   }
@@ -228,7 +228,8 @@ export class CalendarMonthHtmlElement {
     if (date.getFullYear() === this.date.selectedMonth.getFullYear()
       && date.getMonth() === this.date.selectedMonth.getMonth()) {
       const day = this.calendar
-        .querySelectorAll(`.${ config.css_class.DAY_OF_MONTH }.${ config.css_class.ENABLED }`)[date.getDate() - 1];
+        .querySelectorAll(`.${ config.css_class.DAY_OF_MONTH }.${ config.css_class.ENABLED }`)
+        [date.getDate() - 1];
       day.replaceChild(div, day.querySelector(`.${config.css_class.LIST_TASK}`));
     }
   }

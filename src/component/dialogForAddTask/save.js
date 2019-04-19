@@ -1,5 +1,5 @@
 import { config } from '../../config';
-import { CustomEventSave } from '../../customEventSave';
+import { CustomEventSave} from '../CustomEvent/customEventSave';
 
 export class Save {
   constructor(params = {}) {
@@ -7,7 +7,7 @@ export class Save {
     this.component = document.createElement(config.selector.DIV);
     this.component.className = config.css_class.WRAPPER_SAVE;
     this.button = document.createElement(config.selector.BUTTON);
-    this.button.className = `btn btn-success ${ config.css_class.BUTTON_SAVE }`;
+    this.button.className = `${config.css_class.bootstrap.BTN_SUCCESS} ${ config.css_class.BUTTON_SAVE }`;
     this.button.innerText = config.text.BUTTON_SAVE;
 
     if (this.params.useError) {

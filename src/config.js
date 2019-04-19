@@ -41,6 +41,7 @@ export const config = {
     DISABLED: 'disabled',
     SELECTED: 'selected',
     SHOW_HOVER: 'showHover',
+    DATE_PICKER_WRAPPER: 'datePickerWrapper',
 
     CALENDAR_MONTH: 'calendarMonth',
     DIALOG: 'dialog',
@@ -70,6 +71,11 @@ export const config = {
     ERROR: 'error',
     ERROR_INPUT: 'errorInput',
     ENTER_INPUT: 'enterInput',
+
+    bootstrap: {
+      BTN_SUCCESS: 'btn btn-success',
+      BTN_OUTLINE_PRIMARY: 'btn btn-outline-primary',
+    }
   },
   css_id: {
     MONTH: 'month',
@@ -85,11 +91,20 @@ export const config = {
 
   text: {
     BUTTON_TODAY: 'Today',
+    BUTTON_ADD_TIME: '<span><i class="fas fa-plus"></i> Add time</span>',
+    BUTTON_DELETE: '<i class="fas fa-trash-alt"></i>',
     PLACEHOLDER_NAME_TASK: 'Add name and time',
     PLACEHOLDER_NAME_TASK_WITHOUT_TIME: 'Add name',
     BUTTON_SAVE: 'Save',
     BUTTON_SAVE_ERROR_MESSAGE: 'The selected date is busy!',
     DEFAULT_ERROR_MESSAGE: 'Error!!!',
+    DIALOG_NAME: 'Name',
+    DIALOG_START_DATE: 'Start date',
+    DIALOG_END_DATE: 'End date'
+  },
+  custom_event: {
+    SAVE: 'save',
+    DELETE: 'delete'
   }
 
 };

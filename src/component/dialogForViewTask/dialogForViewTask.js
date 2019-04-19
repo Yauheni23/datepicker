@@ -3,7 +3,7 @@ import { config } from '../../config';
 import { DeleteTask } from './deleteTask';
 import { DateForMonth } from '../../dateForMonth';
 
-export class DialogForViewTask extends Dialog{
+export class DialogForViewTask extends Dialog {
   constructor() {
     super();
     this.dialog.classList.add(config.css_class.VIEW_TASK);
@@ -41,7 +41,9 @@ export class DialogForViewTask extends Dialog{
     this.deleteTask.setDataForDelete({
       startDate: new DateForMonth(Date.parse(this.selectedElement.startDate))
     });
-    this.deleteTask.callCustomEventDeleteForElement(document.querySelector(`.${ config.css_class.CALENDAR_MONTH }`));
+    this.deleteTask.callCustomEventDeleteForElement(
+      document.querySelector(`.${ config.css_class.CALENDAR_MONTH }`)
+    );
   }
 
   showDialog(el) {
@@ -52,10 +54,12 @@ export class DialogForViewTask extends Dialog{
   }
 
   fillDialog() {
-    this.name.innerText = `Name: ${ this.selectedElement.name }`;
-    this.startDate.innerText = `Start date: ${ new DateForMonth(Date.parse(this.selectedElement.startDate)) }`;
+    this.name.innerText = `${config.text.DIALOG_NAME}: ${ this.selectedElement.name }`;
+    this.startDate.innerText =
+      `${config.text.DIALOG_START_DATE}: ${ new DateForMonth(Date.parse(this.selectedElement.startDate)) }`;
     if (this.selectedElement.duration !== 0) {
-      this.endDate.innerText = `End date: ${ new DateForMonth(Date.parse(this.selectedElement.endDate)) }`;
+      this.endDate.innerText =
+        `${config.text.DIALOG_END_DATE}: ${ new DateForMonth(Date.parse(this.selectedElement.endDate)) }`;
     } else {
       this.endDate.innerText = '';
     }
@@ -63,7 +67,7 @@ export class DialogForViewTask extends Dialog{
 
   replaceDeleteTask() {
     this.deleteTask = new DeleteTask();
-    this.dialog.replaceChild(this.deleteTask.component, this.dialog.querySelector(`.${config.css_class.DELETE_TASK}`));
+    this.dialog.replaceChild(this.deleteTask.component, this.dialog.querySelector(`.${ config.css_class.DELETE_TASK }`));
   }
 
 }

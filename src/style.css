@@ -205,6 +205,10 @@ input[type="date_picker"]:focus, .inputTime:focus {
     padding: 4px;
 }
 
+.datePickerWrapper{
+    position: relative;
+}
+
 .startTimeDatepicker, .endTimeDatepicker {
     width: 85px;
 }
