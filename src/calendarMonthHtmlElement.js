@@ -40,7 +40,7 @@ export class CalendarMonthHtmlElement {
   createSelectMonthHtmlElement() {
     this.selectMonth = document.createElement(config.selector.SELECT);
     this.selectMonth.id = config.css_id.MONTH;
-    config.MONTH.forEach((el, index) => {
+    config.MONTH_CALENDAR_MONTH.forEach((el, index) => {
       const option = document.createElement(config.selector.OPTION);
       option.value = `${ index }`;
       option.innerText = el;
@@ -73,7 +73,7 @@ export class CalendarMonthHtmlElement {
     const daysOfWeek = document.createElement(config.selector.DIV);
     daysOfWeek.className = config.css_class.DAYS_OF_WEEK;
 
-    config.DAYS_OF_WEEK.forEach(name => {
+    config.DAYS_OF_WEEK_CALENDAR_MONTH.forEach(name => {
       const dayOfWeek = document.createElement(config.selector.DIV);
       dayOfWeek.className = config.css_class.DAY_OF_WEEK;
 
